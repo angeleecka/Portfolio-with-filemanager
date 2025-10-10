@@ -1,0 +1,572 @@
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:30: <button class="nav-toggle" aria-label="Открыть меню">
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:50: <!-- Левая колонка -->
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:55: <h2>Панель управления</h2>
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:58: ⚠️ Перед созданием папки или файла убедитесь, что вы в находитесь в правильном разделе.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:63: <legend class="op-title">Создать / Загрузить</legend>
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:66: <input id="mkdirName" class="admin-input" placeholder="Введите имя папки" />
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:67: <button id="btnMkdir" class="ok">Создать папку</button>
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:69: <button id="btnUpload" class="ok">Загрузить</button>
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:75: <legend class="op-title">Переименовать</legend>
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:78: <input id="renameOld" class="admin-input" placeholder="Старое имя папки/файла" />
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:79: <input id="renameNew" class="admin-input" placeholder="Новое имя папки/файла" />
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:80: <button id="btnRename">Переименовать</button>
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:86: <legend class="op-title">Удалить</legend>
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:89: <input id="deleteName" class="admin-input" placeholder="Введите имя папки/файла" />
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:90: <button id="btnDelete">Удалить</button>
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:91: <button id="btnRestore">Восстановить</button>
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:97: <!-- Правая колонка -->
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:102: <!-- "Левый бордер" с кнопкой -->
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:103: <button id="adminDrawerBtn" class="admin-drawer-btn" aria-controls="adminDrawer" aria-expanded="false" aria-label="Открыть панель">
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:111: <!-- Центровой блок -->
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:119: <section class="preview-scroll"> <!-- ВНУТРЕННИЙ СКРОЛЛ -->
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:121: <!-- Контент портфолио -->
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:131: <button id="previewCloseBtn" class="close-btn" type="button" aria-label="Закрыть"></button>
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\admin-portfolio.html:136: Не удалось загрузить изображение
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\app.js:8: // Импортируем функцию генерации JSON
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\app.js:13: // Раздаём статические файлы (CSS, картинки и т.д.)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\app.js:18: // Автоматическая версия CSS (mtime = время изменения файла)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\app.js:23: // Рендер через EJS (или Pug/Handlebars, если используешь другой движок)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\app.js:31: // --- Первая генерация JSON при старте ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\app.js:34: console.log("🔄 Первая генерация portfolio.json...");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\app.js:37: console.error("❌ Ошибка при первой генерации JSON:", err);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\app.js:41: // --- Вотчер для папки uploads ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\app.js:48: console.log(`📂 Изменение в uploads: ${event} ${filePath}`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\app.js:51: console.log("✅ portfolio.json обновлён автоматически");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\app.js:53: console.error("❌ Ошибка при обновлении JSON:", err);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\config.js:3: // внутренняя папка для хранения медиа
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\config.js:6: // URL, по которому они будут доступны
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:3: /* Базовый хедер            */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:6: position: relative; /* Или static, если нужно, чтобы он был полностью в потоке */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:19: /* Цвета через переменные   */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:22: /* цвет текста/логотипа в обычном состоянии */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:24: /* цвет линий бургера в обычном состоянии */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:28: /* Липкий хедер */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:30: --header-fg: var(--color-text-on-accent);     /* например, белый */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:31: --burger-color: var(--color-text-on-accent);  /* например, белый */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:35: /* Лого                     */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:42: /* Навигация                */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:56: /* Кнопка-бургер            */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:59: width: var(--click-area); /* Используем нашу переменную для кликабельной области */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:74: /* Линии бургера */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:77: width: var(--burger-line-width); /* Заменили 24px на переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:78: height: var(--burger-line-height); /* Заменили 2px на переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:79: border-radius: var(--radius-pill); /* Заменили 2px на переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:81: transition: background var(--dur-quick); /* Заменили 0.2s на переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:85: /* Десктопное поведение     */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-header.css:89: display: none; /* скрываем бургер */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:2: 1. Общий контейнер контента
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:5: /* Прокручиваемая зона с категориями и файлами */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:24: 2. Сетка категорий и галереи файлов
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:25: (одинаковая сетка для category-list и gallery)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:37: 3. Карточка категории (папка)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:55: /* Заголовок внутри карточки */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:72: /* Фоновое изображение в карточке */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:87: 4. Ячейки файлов (файлы в галерее)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:95: /* Превью файлов (картинки/видео) */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:106: /* Подпись под файлами */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:115: /* Если вы используете разные классы для файлов и папок,
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:116: используйте их: */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:126: 6. Область предпросмотра справа
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:144: /* --- Панель предпросмотра --- */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:158: transition: flex-basis 0.25s ease, width 0.25s ease; /* плавное раскрытие */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:160: /* --- Ручка-резайзер --- */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:164: left: -6px; /* наезжаем на область плиток */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:165: width: 8px; /* удобная зона захвата */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:169: /* background: rgba(255,0,0,0.2); /* подсветка для отладки */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:170: background: none; /* Убираем отладочный фон */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:184: flex: 0 1 400px; /* Позволяет панели сжиматься до 0 и растягиваться до 400px, но не больше */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:185: width: auto; /* убираем фиксированную ширину */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:193: /* во время перетаскивания */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:202: /* --- Тело предпросмотра --- */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:212: /* Враппер под картинку: размер = размеру картинки */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:217: max-height: 90vh; /* должно совпадать с ограничением для img */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:220: /* Крестик — тонкий и большой, как раньше */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:259: /* --- Картинка в предпросмотре --- */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:263: max-height: 90vh; /* ключ: ограничение по высоте окна */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:269: /* Контент в предпросмотре: картинка или видео */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:274: object-fit: contain; /* влезает целиком */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:279: /* Lightbox для мобильных экранов (по умолчанию скрыт) */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:311: /* Навигация */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:313: /* Устанавливаем базовые стили для всех кнопок */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:347: /* Двигаем стрелки внутри зоны */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:359: /* Крестик закрытия */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\admin-portfolio-desktop.css:416: /* Подпись и счётчик */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\carousel.css:6: /* Карусель */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\carousel.css:43: padding: 30px 20px 60px; /* можно потом тоже на токены */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\carousel.css:95: Кнопка "Перейти в Портфолио"
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\carousel.css:125: /* десктоп */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\contacts.css:30: flex-direction: column; /* иконка сверху, текст снизу */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\contacts.css:51: /* Форма */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\contacts.css:96: /* Карта */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\contacts.css:112: /* для планшетов и шире — раскладываем в строку */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\header-contrast.css:3: СТИЛИ УНИКАЛЬНЫЕ ДЛЯ СТРАНИЦЫ ПОРТФОЛИО (mobile-first) */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\header-contrast.css:5: /* Правило для хедера без карусели (страницы портфолио и других без карусели). */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\header-contrast.css:11: Стили для хедера на странице портфолио, когда он НЕ липкий.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\header-contrast.css:12: Применяются на белом фоне, чтобы обеспечить контраст.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\header-contrast.css:24: /* Ограничиваем переопределение стилей только для горизонтального меню на десктопе */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\header-contrast.css:27: align-items: center; /* Для центрирования горизонтальных ссылок */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\header-contrast.css:56: Стили для кнопки "STAFF ONLY" на мобильной версии.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\header-contrast.css:72: СТИЛИ УНИКАЛЬНЫЕ ДЛЯ СТРАНИЦЫ ПОРТФОЛИО
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\header-contrast.css:73: (десктоп, переопределения для экранов от 768px)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\header-contrast.css:76: /* Убираем отступы у элементов списка */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\header-contrast.css:82: Стили для кнопки "STAFF ONLY" на десктопе.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\header-contrast.css:95: /* Кнопка-бургер */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:15: aspect-ratio: 1 / 1; /* гарантируем квадрат */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:19: flex: 0 0 var(--intro-avatar-size); /* <— запретить сжатие! */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:49: justify-content: center; /* важно: чтобы «обрезанные» ряды были по центру */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:63: margin: 0 auto; /* чтобы выравнивалось красиво */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:81: aspect-ratio: 1 / 1; /* делаем квадрат */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:82: object-fit: cover; /* обрезаем по краям, но заполняем весь квадрат */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:117: /* Сетка команды */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:120: grid-template-columns: 1fr; /* mobile-first — одна колонка */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:125: /* Карточка участника */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:131: /* Фото круглое */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:141: /* Имя */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:148: /* Описание */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:159: /* планшет */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:171: flex: 1 1 auto; /* текст тянется на оставшееся пространство */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\home.css:184: /* десктоп */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:4: Сбросы и базовые стили
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:41: /* Используем переменные */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:46: /* липкий */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:54: ) !important; /* Используем семантическую переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:57: ); /* Новая переменная для липкого заголовка */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:58: box-shadow: var(--shadow-sticky); /* Используем переменную для тени */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:79: height: var(--header-border-size); /* Задаём переменную для высоты */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:85: /* Задаём переменную для полосы */ transparent var(--stripe-thickness),
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:87: /* Используем calc() для поддержания пропорций */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:92: 1. Меню (выпадающее)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:96: top: var(--menu-top-offset); /* Используем переменные из :root */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:118: /* Ссылки в меню */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:128: align-items: stretch; /* Гарантируем центрирование всех элементов */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:144: line-height: var(--nav-line-height-mobile); /* Переменная для мобильного */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:158: border-left: var(--nav-border-active); /* Используем переменную из :root */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:164: /* Переменные для ландшафтной ориентации */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:171: Кнопка-бургер/крестик
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:175: width: var(--burger-size); /* Используем переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:186: gap: var(--burger-gap); /* Переменная для зазора */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:190: /* Линии */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:193: width: var(--burger-line-width); /* Переменная для ширины */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:194: height: var(--burger-line-height); /* Переменная для высоты */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:201: /* Анимация превращения в крестик */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:203: /* Используем calc() для точного позиционирования */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:219: /* Для липкого хедера */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:222: border-radius: var(--radius-lg); /* Используем переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:223: box-shadow: var(--shadow-md); /* Используем переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:253: /* Здесь мы используем существующие переменные,
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:254: чтобы сохранить DRY (Don't Repeat Yourself) */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:256: /* планшет */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:263: background-color: var(--surface-hero-overlay); /* Используем переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:286: margin: var(--space-2) 0; /* Используем переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:296: /* десктоп */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\main-styles.css:299: font-size: var(--fs-h2); /* Используем переменную для заголовка */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:4: БАЗОВАЯ РАЗМЕТКА
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:41: font-size: 14px; /* Оставил, так как нет переменной */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:63: КНОПКА (три точки / гамбургер)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:82: /* Кнопка-крестик (закрытие панели) */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:105: ПАНЕЛЬ (off-canvas на мобилке)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:146: ПАНЕЛЬ: элементы
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:150: font-size: 1.1rem; /* Оставил, так как нет переменной */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:151: font-weight: 600; /* Оставил, так как нет переменной */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:174: font-size: var(--fs-h5); /* 0.8rem -> var(--fs-h5) (или другая переменная) */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:200: border: 1px solid #ccc; /* Оставил, нет переменной */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:227: ПРАВАЯ ПАНЕЛЬ (портфолио)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:230: /* На всех админских страницах */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:250: Заголовок и хлебные крошки
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:272: font-size: 0.9rem; /* Оставил, нет переменной */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\MOBILE-FIRST.css:293: DESKTOP (панель статична сбоку)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\modalPass.css:4: /* ---- Модальное окно входа ---- */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\modalPass.css:12: background: rgba(59, 43, 32, 0.96); /* чуть темнее, чем было */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\modalPass.css:13: display: none; /* скрыто по умолчанию */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\modalPass.css:17: /* легкая матовость (если поддерживается) */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\modalPass.css:38: /* Поля ввода в модалке */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\modalPass.css:47: /* Обёртка поля пароля + глазик */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\modalPass.css:57: padding-right: 40px; /* место под глазик */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\modalPass.css:73: /* Кнопка-глазик — отдельный класс, чтобы не наследовала общий стиль кнопок */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\modalPass.css:88: /* Кнопки действий модалки (Войти / Отмена) — стилизуем только их, не глазик */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\modalPass.css:108: /* Сообщения об ошибке */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\modalPass.css:114: min-height: 1.2em; /* чтобы не прыгала верстка */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\modalPass.css:117: /* Фокусы — доступность клавиатурой */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:3: /* ===== Портфолио: общий контейнер ===== */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:20: /* ===== Хлебные крошки ===== */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:37: /* ===== Список категорий ===== */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:45: /* Карточка категории */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:64: /* Изображение */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:79: /* Заголовок */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:96: /* ===== Галерея ===== */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:108: /* 1. Контейнер плитки: задает форму с помощью padding */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:123: /* 2. Изображение внутри: заполняет контейнер */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:207: /* Общие кнопки */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:224: /* Стрелки */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:250: /* Крестик */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:300: /* Базовые стили для мобильных устройств */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:319: /* Хлебные крошки */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:338: /* Список категорий */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:347: /* Карточка категории */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:366: /* Изображение */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:381: /* Заголовок */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\portfolio.css:398: /* ===== Галерея ===== */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:3: /* Контейнер для списка услуг */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:8: max-width: var(--container-max); /* Используем нашу переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:15: font-weight: var(--fw-bold); /* Используем переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:16: line-height: var(--lh-heading); /* Используем переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:21: /* Карточка услуги */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:34: /* Изображение */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:49: /* Тексты */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:53: font-size: var(--fs-h2); /* Используем переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:54: line-height: var(--lh-heading); /* Используем переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:59: font-size: var(--fs-p); /* Исправлена переменная */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:63: /* Цена */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:67: font-weight: var(--fw-bold); /* Используем переменную */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:74: /* Адаптив */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\services.css:76: /* Убираем дублирование. */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:3: /* 🎨 Базовые токены (примитивы) */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:4: /* Эти переменные содержат конкретные значения. Их не нужно менять часто. */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:7: /* Цвета */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:14: /* Тексты */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:21: /* Поверхности */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:33: /* Уведомления */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:39: /* Типографика */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:58: /* Отступы */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:78: /* Радиусы */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:85: /* Тени */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:95: /* Анимации */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:103: /* 🚀 Семантические токены (токены компонентов) */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:104: /* Эти переменные описывают назначение, используя базовые токены. */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:107: /* Контейнеры */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:112: /* Навигация */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:142: /* Компоненты */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:154: /* Z-index слои */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:158: /* Элементы управления (кнопки, иконки) */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\css\variables.css:161: /* Скорость анимаций */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\index.html:61: <img src="img/Rome/894173575244699782.jpg" alt="Римский образ" />
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\index.html:69: alt="Образ в стиле Гэтсби"
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\index.html:76: alt="Египетский образ"
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\index.html:89: <img src="img/894663995011633060.jpg" alt="О нас" />
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:30: // === СОЗДАТЬ ПАПКУ ===
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:62: // === ЗАГРУЗИТЬ ФАЙЛ ===
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:85: // === ПЕРЕИМЕНОВАТЬ ===
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:92: // ⚡️ КРИТИЧЕСКИЙ ПАТЧ: Проверяем, является ли элемент файлом, и корректно извлекаем расширение
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:95: // Если точка найдена И она не находится в самом начале имени (т.е. это не скрытая папка/файл),
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:96: // считаем, что это файл, и пытаемся сохранить расширение.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:100: // Если в новом имени нет точки (пользователь ввел "photo" вместо "photo.jpg"),
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:101: // добавляем старое расширение.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:106: // 💡 Если lastDotIndex === -1 или 0, это считается папкой или скрытым файлом без расширения, и код пропускает добавление.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:124: // ⚡️ ДОБАВЛЕНИЕ: Очистка полей после успеха
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:132: } // Также очищаем глобально выбранный файл, так как его имя изменилось:
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:147: // === УДАЛИТЬ ===
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:163: if (typeof window.hidePreview === "function") window.hidePreview(); // Скрываем превью после удаления
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:168: // ✅ ИЗМЕНЕНИЕ: очищаем инпут и selectedFileName после удаления
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:177: // показываем тост без автоисчезновения, с кнопкой "Отменить"
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:181: "Отменить",
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-actions.js:193: // === ВОССТАНОВИТЬ ===
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:2: // Используется и в админке, и в публичном портфолио (только BASE_PAGE меняется).
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:8: // На публичной странице ставь: const BASE_PAGE = 'portfolio.html';
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:10: // --- глобальное состояние ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:12: // DOM-референсы
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:20: // --- вспомогательные функции ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:92: // --- рендер портфолио ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:104: // ⚡ форсим обновление JSON (убираем кэш браузера)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:154: container.textContent = "❌ Папка не найдена";
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:158: // === файлы ===
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:200: // === папки ===
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:259: console.error("Ошибка загрузки JSON:", e);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:263: // --- предпросмотр ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:271: // ⛳️ Помощник: пропускаем «внешние» якоря и плавно скроллим по текущей странице
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:274: if (!a) return false; // клик не по ссылке — пусть обрабатывается дальше
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:276: if (a.hasAttribute("data-no-scroll")) return true; // отдать браузеру как есть
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:279: if (!href.includes("#")) return false; // не якорь — не мешаем обработке ниже
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:285: // якорь ведёт на ДРУГУЮ страницу — отдать браузеру (переход)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:288: // якорь на этой странице, проверим наличие цели
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:293: // гладкий скролл по текущей странице и «съедаем» дальнейшую обработку клика
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:300: // файлы (ячейки)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:305: // если клик по <a> с якорём — отдать браузеру/скроллу и не мешать
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:308: e.preventDefault(); // твоя логика выбора
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:319: // карточки категорий
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:334: // если это <a> с href — перейдём, иначе откроем предпросмотр
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:359: pane.hidden = false; // важно: снимаем hidden
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:360: pane.classList.add("active"); // важно: именно .active (как в твоём CSS)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:361: // на случай «нулевой» ширины до первого ресайза
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:398: pane.hidden = true; // синхронно прячем
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:465: // --- старт ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:467: // 🚧 Выполняем код только на страницах админки (без жёсткого #someId)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:479: // --- 2. Логика фокуса для инпутов (без изменений) ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:483: // lastActiveInput может быть не объявлен — подстрахуемся (можно оставить)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:493: // --- 3. Инициализация ресайзера ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:494: // attachResizer() теперь будет работать, так как resizer, previewPane и workspace определены
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:497: // --- 4. Рендеринг и навешивание кликов ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:498: // Упрощаем логику: renderPortfolio() САМ вызывает attachPreviewHandlers() в конце.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:499: // Нам нужно только вызвать renderPortfolio, если он существует.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:504: // ПРИМЕЧАНИЕ: Если renderPortfolio не существует, то attachPreviewHandlers()
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:505: // НЕ вызывается. Если вам нужно, чтобы он вызывался и без рендеринга (например,
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:506: // для статического контента), используйте:
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:511: // Запасной вызов, если нет динамического рендеринга
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:515: // НО, так как у вас контент динамический, оставьте только вызов renderPortfolio()
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio — копия.js:516: // и убедитесь, что attachPreviewHandlers() вызывается внутри renderPortfolio().
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:2: // Используется и в админке, и в публичном портфолио (только BASE_PAGE меняется).
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:8: // На публичной странице ставь: const BASE_PAGE = 'portfolio.html';
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:10: // --- глобальное состояние ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:14: // DOM-референсы
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:22: // --- вспомогательные функции ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:94: // --- рендер портфолио ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:106: // ⚡ форсим обновление JSON (убираем кэш браузера)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:156: container.textContent = "❌ Папка не найдена";
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:160: // === файлы ===
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:202: // === папки ===
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:261: console.error("Ошибка загрузки JSON:", e);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:265: // --- предпросмотр ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:273: // ⛳️ Помощник: пропускаем «внешние» якоря и плавно скроллим по текущей странице
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:276: if (!a) return false; // клик не по ссылке — пусть обрабатывается дальше
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:278: if (a.hasAttribute("data-no-scroll")) return true; // отдать браузеру как есть
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:281: if (!href.includes("#")) return false; // не якорь — не мешаем обработке ниже
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:287: // якорь ведёт на ДРУГУЮ страницу — отдать браузеру (переход)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:290: // якорь на этой странице, проверим наличие цели
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:295: // гладкий скролл по текущей странице и «съедаем» дальнейшую обработку клика
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:302: // файлы (ячейки)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:307: // если клик по <a> с якорём — отдать браузеру/скроллу и не мешать
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:310: e.preventDefault(); // твоя логика выбора
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:321: // карточки категорий
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:336: // если это <a> с href — перейдём, иначе откроем предпросмотр
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:361: pane.hidden = false; // важно: снимаем hidden
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:362: pane.classList.add("active"); // важно: именно .active (как в твоём CSS)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:363: // на случай «нулевой» ширины до первого ресайза
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:400: pane.hidden = true; // синхронно прячем
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:467: // --- старт ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:480: // ✅ при фокусе инпута подставляем selectedFileName
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-portfolio.js:507: // ✅ ИЗМЕНЕНИЕ: функция больше не нужна, но оставляем для совместимости
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:8: "gif", // Изображения
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:13: "mkv", // Видео
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:30: // если есть кнопка действия
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:46: } // Крестик добавляется, если есть кнопка действия (Отменить) ИЛИ если таймер не отключен явно (false)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:48: // 3. ДОБАВЛЯЕМ КРЕСТИК ЗАКРЫТИЯ (Ручной контроль)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:51: closeBtn.textContent = "×"; // Символ крестика
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:58: setTimeout(() => toast.remove(), 300); // Плавное исчезновение
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:65: // плавное появление
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:68: // 4. АВТОИСЧЕЗНОВЕНИЕ (Гибкий таймер)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:70: // Определяем задержку: 7000 мс, если autoHide === true, или заданное число
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:80: * Проверяет имя на наличие запрещенных символов (кроме пробела).
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:81: * Точка ('.') включена в этот набор, чтобы запретить ее для папок.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:84: // Ищем: / \ : * ? " < > | . (без пробела)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:90: // создать папку
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:92: const inputElement = document.getElementById("mkdirName"); // <-- Получаем элемент
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:94: if (!name) return showToast("Введите название папки!", "warning"); // Выполняем действие
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:96: // Строгая проверка: запрет точки и спецсимволов.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:99: 'Название папки не должно содержать символы: / \\ : * ? " < > | и точку (.).',
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:106: // ✅ ДОБАВЛЕНИЕ: Если создание прошло успешно, очищаем поле
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:112: // загрузить файл
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:115: if (!fileInput.files.length) return showToast("Выберите файл!", "warning");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:119: // переименовать
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:123: if (!oldName || !newName) return showToast("Укажите имена!", "warning");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:125: // ⚡️ ДОБАВЛЕНИЕ: Проверка, чтобы не добавить точку, если это папка
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:126: const isFile = oldName.includes("."); // Простая эвристика: если старое имя содержит точку, это файл.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:128: // 1. Проверяем на все критически запрещенные символы (кроме точки и пробела)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:133: 'Новое имя содержит запрещенные символы: / \\ : * ? " < > |',
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:139: // ⚡️ ИСПРАВЛЕНИЕ: Проверяем расширение только если пользователь ввел точку
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:141: // Проверяем, что расширение находится в 'белом списке'
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:148: `Недопустимое расширение: .${newExt}. Разрешены: ${ALLOWED_EXTENSIONS.join(
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:154: } // Конец: if (newName.includes("."))
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:156: // ИЛИ if (newName.startsWith(".")) (следующая проверка)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:157: } // 2. Специальная проверка на точки: (ЭТОТ БЛОК НИЖЕ ОСТАВЛЯЕМ КАК ЕСТЬ)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:160: // Элемент — ПАПКА. Точки запрещены.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:161: return showToast("Нельзя ставить точку в имени папки.", "warning");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:165: // Элемент — ФАЙЛ. Не может начинаться с точки.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:166: return showToast("Имя файла не может начинаться с точки.", "warning");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:172: // удалить
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:175: if (!name) return showToast("Введите имя для удаления!", "warning");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:179: // восстановить
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:185: /* Выезжающая панель (мобилка)       */
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:205: // Обертка: выполняет действие, логирует и обновляет UI
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:209: console.log(`✅ ${label} успешно:`, result);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:210: showToast(`${label}: выполнено`, "success");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:215: console.error(`❌ ${label} ошибка:`, err);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\admin-ui.js:216: showToast(`${label}: ошибка`, "error");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\error-handler.js:3: // Ловим необработанные ошибки в промисах
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\error-handler.js:6: // Можно ещё отправить ошибку на сервер для логов:
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:9: // Админка есть? да. Но бургер всё равно должен работать.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:12: if (!headerEl) return; // ⛔️ не гасим код на админке, выходим только если хедера нет
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:14: // --- режимы: hero / trigger / solid ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:19: // helperы для переключения классов (общая анимация/фон у тебя уже в CSS)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:33: // --- 1) Липкий хедер по сценариям ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:45: // Чуть «подтягиваем» момент срабатывания, чтобы переход выглядел естественно
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:51: // на случай, если пользователь перезагрузил страницу уже прокрученной:
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:62: // solid: липкий сразу, а «компактность» добавляем после небольшой прокрутки
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:67: // можешь включить/использовать .scrolled в CSS, если нужно
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:74: // --- 2) Мобильное меню (бургер) ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:83: // клик вне меню — закрыть
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:96: // переход по якорям — закрыть меню (мобайл UX)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:107: // --- 3) Подсветка активной ссылки (учитываем index.html по умолчанию) ---
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\header.js:114: const linkFile = linkPath.split("#")[0]; // игнорируем якорь
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\main.js:7: // Админка
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\main.js:14: if (!el) return; // защита от ошибки
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\portfolio.js:14: // Загружаем JSON
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\portfolio.js:52: // === Галерея файлов ===
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\portfolio.js:67: img.dataset.caption = file; // фикс: всегда сохраняем подпись
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\portfolio.js:69: img.onerror = function onErr() { // заменила
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\portfolio.js:86: // === Подкатегории ===
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\portfolio.js:115: // заменила t.onload/t.onerror
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\portfolio.js:215: lastActive = null;      // освобождаем ссылку на ранее активный элемент
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\portfolio.js:292: // свайпы
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\portfolio.js:315: // кнопки
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\portfolio.js:320: // делегатор (глобальный флаг предотвращает дублирование)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\portfolio.js:334: // публичный хук
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\script.js:4: 1) Карусель на главной (index.html)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\script.js:21: 2) Карусель услуг (services.html)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\js\script.js:33: // точки
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\portfolio.html:72: <!-- Хлебные крошки -->
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\portfolio.html:75: <!-- Контент портфолио -->
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\portfolio.html:180: <!-- Крестик (чистый button, рисуется псевдоэлементами) -->
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\portfolio.html:187: <!-- Левая стрелка -->
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\portfolio.html:201: <!-- Правая стрелка -->
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:1: // check-filenames.js ---- Как запускать Скрипт (safety first)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:3: /*  Открыть терминал в корне проекта.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:4: Запустить:
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:5: 1). node check-filenames.js — интерактивно.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:6: 2). node check-filenames.js --auto — автоматически применять все предложенные переименования (ОПАСНО — используй с осторожностью).
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:7: 3). node check-filenames.js --dir=otherdir — сканировать другую папку (по желанию).
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:9: В выводе увидишь все проблемные файлы, например:
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:10: ⚠️ В имени есть пробел/невидимый символ: "admin-portfolio .js"
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:12: Рекомендации по безопасности и использованию
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:14: - Не запускай от администратора / root — достаточно обычного пользователя.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:15: - Перед массовым применением запусти сначала: node check-filenames.js (без --auto) и выбери вариант P (перфайл) или Y после просмотра.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:16: - Резервная копия: скрипт сохраняет rename-backup-<ts>.json с картой переименований.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:17: - Если есть CI / репозиторий — закоммить изменения в контролируемой среде (git) — будет ещё проще откатить.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\check-filenames.js:18: - По желанию могу добавить --dry флаг, отдельный режим симуляции, или автоматический откатный скрипт, который читает rename-backup-*.json и откатывает.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:17: logs.push(`✖ пропущена пустая/битая запись: ${JSON.stringify(node)}`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:25: logs.push(`✖ нет папки на диске → удаляю из JSON: ${path.join(...segments, node.name)}/`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:34: logs.push(`✖ нет файла на диске → удаляю из JSON: ${path.join(...segments, node.name)}`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:40: logs.push(`✖ неизвестный type "${node.type}" → удаляю: ${path.join(...segments, node.name)}`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:48: console.error("❌ JSON-файл не найден:", jsonPath);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:57: console.error("❌ Ошибка парсинга JSON:", e.message);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:64: const beforeCount = JSON.stringify(data).length; // грубая метрика объёма
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:68: // бэкап
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:73: // запись
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:76: // отчёт
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:78: console.log("✅ JSON очищен и сохранён:", jsonPath);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:79: console.log("🗂 Бэкап:", backupPath);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:80: console.log(`📉 Удалено: папок ${stats.removedFolders}, файлов ${stats.removedFiles}, прочее ${stats.removedUnknown}`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:81: console.log(`↔️ Размер JSON (символов): было ${beforeCount}, стало ${afterCount}`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:83: console.log("— детали —");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:91: /* Асинхронный вариант ===============
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:97: // Проверка существования файла
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:101: console.error("❌ JSON-файл не найден:", jsonPath);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:105: // Чтение JSON
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:110: console.error("❌ Ошибка чтения JSON:", e.message);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:118: console.error("❌ Ошибка парсинга JSON:", e.message);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:125: const beforeCount = JSON.stringify(data).length; // грубая метрика объёма
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:129: // Создание бэкапа
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:135: console.error("❌ Ошибка создания бэкапа:", e.message);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:139: // Запись очищенного JSON
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:143: console.error("❌ Ошибка записи JSON:", e.message);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:147: // Отчёт
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:149: console.log("✅ JSON очищен и сохранён:", jsonPath);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:150: console.log("🗂 Бэкап:", backupPath);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:151: console.log(`📉 Удалено: папок ${stats.removedFolders}, файлов ${stats.removedFiles}, прочее ${stats.removedUnknown}`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:152: console.log(`↔️ Размер JSON (символов): было ${beforeCount}, стало ${afterCount}`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\clean-portfolio.js:154: console.log("— детали —");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:11: // имена файлов/папок, которые нужно игнорировать (нижний регистр)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:14: Для директорий допустимы:
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:15: - точные имена: "tmp", "trash"
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:16: - с точкой: ".tmp"
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:17: - префиксы/суффиксы, например "tmp-" или "-tmp"
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:18: Здесь можно расширить правило под свои нужды.
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:21: "tmp",      // точное совпадение
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:22: ".tmp",     // скрытая
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:25: "temp",     // "temp" тоже
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:28: // включаем игнор скрытых папок (начинающихся с '.')
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:31: // Проверка директорий
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:40: if (lp === lower) return true;               // точное совпадение
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:54: console.error("Ошибка чтения папки:", dir, err);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:59: // игнор по имени файла
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:69: console.log(`Пропускаем симлинк: ${relPath}`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:73: console.warn("Не удалось проверить симлинк:", fullPath, e);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:78: console.log(`Пропускаем директорию (ignore): ${relPath}`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:100: console.error("Ошибка чтения файла:", fullPath, err);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:103: console.log(`Пропускаем неизвестный тип узла: ${relPath}`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:112: console.log("Запуск генерации portfolio.json — читаем:", UPLOADS_DIR);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:116: console.log("✅ portfolio.json обновлён:", OUTPUT_FILE);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\scripts\generatePortfolioJson.js:118: console.error("Ошибка генерации JSON:", err);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:14: // Корректный __dirname для ESM
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:18: // Пути проекта
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:23: // Пробуем загрузить Swagger спецификацию (если нет — просто отключим /api-docs)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:40: // dev-only: отключить кэш для html/js/css
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:54: // Базовые middleware (ОДИН раз)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:59: // ⛔️ Бан-лист: защищаем служебные файлы и каталоги
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:60: // ВАЖНО: этот middleware должен быть ПЕРЕД express.static(...)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:74: // Если Swagger выключен, не “светим” сырой /docs/swagger.json
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:82: // 🔐 Swagger только по флагу (оставляем в демо)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:97: // ⚙️ Раздача статики (после бан-листа)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:102: // Гарантируем наличие директорий uploads/trash
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:105: console.log("📁 Создана папка uploads");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:109: console.log("📁 Создана папка trash");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:113: // Watcher: авто-регенерация data/portfolio.json при изменениях в uploads
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:128: }, 300); // легкий debounce, чтобы не дергать генератор слишком часто
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:133: ignored: /(^|[\/\\])\../, // игнор dot-файлов
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:173: // Отдаём data/portfolio.json без кеша (клиент всегда получает свежий JSON)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:178: if (err) return res.status(204).end(); // нет файла — 204 No Content
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:202: // === multer storage & API (safe, совместимо) ===
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:208: // нормализуем unicode, удаляем опасные символы, ограничиваем длину
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:227: // временно кладём в корень uploads, потом переносим в целевую папку по body.folderPath
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:236: limits: { fileSize: 8 * 1024 * 1024, files: 30 }, // 8MB, максимум 30 файлов
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:246: // создать папку
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:251: return res.status(400).send("folderPath обязателен");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:261: return res.status(500).send("Не удалось создать папку");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:265: // загрузить файл (поле формы 'file' + body.folderPath)
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:271: return res.status(400).send(err.message || "Ошибка загрузки");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:273: if (!req.file) return res.status(400).send("Файл не получен");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:286: console.log(`✅ Загружен файл: ${originalName}`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:287: console.log(`📂 Папка назначения: ${folderPath || "(корень)"}`);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:298: return res.status(500).send("Ошибка при перемещении файла");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:303: // переименовать
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:308: return res.status(400).send("Нужно oldPath и newPath");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:312: if (!fs.existsSync(from)) return res.status(404).send("Источник не найден");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:326: return res.status(500).send("Не удалось переименовать");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:330: // удалить (в корзину) + метаданные для восстановления
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:334: if (!targetPath) return res.status(400).send("Нужно targetPath");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:337: if (!fs.existsSync(full)) return res.status(404).send("Не найдено");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:354: return res.status(500).send("Не удалось удалить");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:358: // восстановить
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:362: if (!targetPath) return res.status(400).send("Нужно targetPath");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:370: if (!cand) return res.status(404).send("Файл не найден в корзине");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:376: return res.status(404).send("Метаданные не найдены");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:394: return res.status(500).send("Не удалось восстановить");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:398: // очистка корзины
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:410: return res.json({ success: true, message: "Корзина очищена" });
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:413: return res.status(500).send("Не удалось очистить корзину");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:417: // ручной rebuild
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:424: return res.status(500).send("Не удалось перегенерировать JSON");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:428: // Глобальный ловец ошибок Multer/валидаторов
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:437: // стартуем сервер
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:447: console.log("📂 portfolio.json синхронизирован с папкой uploads");
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\server.js:449: console.error("Ошибка при первичной генерации JSON:", err);
+E:\1_SANDBOX\portfolio_framework\portfolio-demo\services.html:79: <img src="./img/Rome/894191170652011989.jpg" alt="Образ эпохи Эдо">
+
+
+// ─────────────────────────────────────────────────────────────
+// Optional patch (git) — save as i18n.patch and run: git apply i18n.patch
+// If it fails, just copy files above and edit package.json manually.
+// ─────────────────────────────────────────────────────────────
+/*
+*** Begin Patch
+*** Add File: scripts/find-ru.js
+*** End Patch
+
+
+*** Begin Patch
+*** Add File: scripts/apply-translations.js
+*** End Patch
+
+
+*** Begin Patch
+*** Update File: package.json
+@@
+"devDependencies": {
++ "acorn": "^8.12.1",
++ "node-html-parser": "^6.1.12"
+},
+"scripts": {
++ "i18n:extract": "node scripts/find-ru.js",
++ "i18n:apply": "node scripts/apply-translations.js",
++ "i18n:apply:dry": "node scripts/apply-translations.js --dry"
+}
+*** End Patch
+*/

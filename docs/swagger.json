@@ -1,0 +1,262 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Portfolio API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/create-folder": {
+      "post": {
+        "summary": "Создать папку",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "folderPath": {
+                    "type": "string",
+                    "example": "project1/images"
+                  }
+                },
+                "required": [
+                  "folderPath"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Папка создана"
+          },
+          "400": {
+            "description": "Некорректный запрос"
+          }
+        }
+      }
+    },
+    "/api/upload-file": {
+      "post": {
+        "summary": "Загрузить файл",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "folderPath": {
+                    "type": "string",
+                    "example": "project1/images"
+                  }
+                },
+                "required": [
+                  "file",
+                  "folderPath"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Файл загружен"
+          },
+          "400": {
+            "description": "Файл не получен"
+          },
+          "500": {
+            "description": "Ошибка загрузки"
+          }
+        }
+      }
+    },
+    "/api/rename": {
+      "post": {
+        "summary": "Переименовать файл или папку",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "oldPath": {
+                    "type": "string",
+                    "example": "project1/oldname.png"
+                  },
+                  "newPath": {
+                    "type": "string",
+                    "example": "project1/newname.png"
+                  }
+                },
+                "required": [
+                  "oldPath",
+                  "newPath"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешно переименовано"
+          },
+          "404": {
+            "description": "Файл/папка не найдены"
+          }
+        }
+      }
+    },
+    "/api/delete": {
+      "post": {
+        "summary": "Удалить файл или папку (в корзину)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "targetPath": {
+                    "type": "string",
+                    "example": "project1/image.png"
+                  }
+                },
+                "required": [
+                  "targetPath"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Удалено (перемещено в trash)"
+          },
+          "404": {
+            "description": "Не найдено"
+          }
+        }
+      }
+    },
+    "/api/restore": {
+      "post": {
+        "summary": "Восстановить из корзины",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "targetPath": {
+                    "type": "string",
+                    "example": "project1/image.png"
+                  }
+                },
+                "required": [
+                  "targetPath"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Файл восстановлен"
+          },
+          "404": {
+            "description": "Файл не найден в корзине"
+          }
+        }
+      }
+    },
+    "/api/save": {
+      "post": {
+        "summary": "Принудительная регенерация portfolio.json",
+        "responses": {
+          "200": {
+            "description": "Файл portfolio.json обновлён"
+          }
+        }
+      }
+    },
+    "/api/portfolio": {
+      "get": {
+        "summary": "Получить содержимое portfolio.json",
+        "responses": {
+          "200": {
+            "description": "JSON с содержимым портфолио",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Portfolio"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/clear-trash": {
+  "post": {
+    "summary": "Очистка корзины",
+    "description": "Удаляет временно сохранённый элемент для восстановления (lastDeletedItem).",
+    "tags": ["Админка"],
+    "responses": {
+      "200": {
+        "description": "Корзина очищена",
+        "content": {
+          "application/json": {
+            "example": {
+              "success": true,
+              "message": "Корзина очищена"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+},
+  "components": {
+    "schemas": {
+      "Portfolio": {
+        "type": "object",
+        "properties": {
+          "projects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Project 1"
+                },
+                "path": {
+                  "type": "string",
+                  "example": "project1/"
+                },
+                "files": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "example": "project1/image.png"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

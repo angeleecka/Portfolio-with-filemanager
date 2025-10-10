@@ -1,0 +1,249 @@
+<!-- admin-portfolio.html (restored layout + safe tweaks) -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>OFFICE | FANTASY</title>
+
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/main-styles.css" />
+    <link rel="stylesheet" href="css/admin-header.css" />
+    <link rel="stylesheet" href="css/MOBILE-FIRST.css" />
+    <link rel="stylesheet" href="css/admin-portfolio-desktop.css" />
+    <!-- <link rel="stylesheet" href="css/modalPass.css"> -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    <link rel="icon" href="favicon.png" type="image/png" />
+  </head>
+
+  <body class="hero-page">
+    <header id="header" class="header headerRelative" data-no-sticky>
+      <div class="logo">FANTASY</div>
+
+      <button class="nav-toggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav id="main-nav" aria-label="Main navigation">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="portfolio.html">Portfolio</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <!-- оставляем якорь на главную и страховку от перехвата -->
+          <li><a href="index.html#contacts" data-no-scroll>Contacts</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="admin-body">
+      <!-- Левая колонка -->
+      <aside class="admin-explorer">
+        <button class="admin-drawer-close" aria-label="Close tab">
+          &times;
+        </button>
+
+        <div class="admin-header">
+          <h2>Control panel</h2>
+        </div>
+        <p class="admin-hint">
+          ⚠️ Before creating a folder or file, ensure you are in the correct
+          section.
+        </p>
+
+        <div class="admin-ops">
+          <fieldset class="op-block">
+            <legend class="op-title">Create / Upload</legend>
+            <div class="row create-group">
+              <input
+                id="mkdirName"
+                class="admin-input"
+                placeholder="Enter folder name"
+              />
+              <button id="btnMkdir" class="ok" type="button">
+                Create folder
+              </button>
+              <input type="file" id="fileInput" class="admin-input" />
+              <button id="btnUpload" class="ok" type="button">Upload</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="op-block">
+            <legend class="op-title">Rename</legend>
+            <div class="row rename-group">
+              <input
+                id="renameOld"
+                class="admin-input"
+                placeholder="Old folder/file name"
+              />
+              <input
+                id="renameNew"
+                class="admin-input"
+                placeholder="New folder/file name"
+              />
+              <button id="btnRename" type="button">Rename</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="op-block">
+            <legend class="op-title">Delete</legend>
+            <div class="row delete-group">
+              <input
+                id="deleteName"
+                class="admin-input"
+                placeholder="Enter folder/file name"
+              />
+              <button id="btnDelete" type="button">Delete</button>
+              <button id="btnRestore" type="button">Restore</button>
+            </div>
+          </fieldset>
+        </div>
+      </aside>
+
+      <!-- Правая колонка -->
+      <section class="admin-preview">
+        <div class="sticky-header">
+          <div class="header-top">
+            <button
+              id="adminDrawerBtn"
+              class="admin-drawer-btn"
+              aria-controls="adminDrawer"
+              aria-expanded="false"
+              aria-label="Open panel"
+            >
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <circle
+                  cx="12"
+                  cy="5"
+                  r="2"
+                  stroke="currentColor"
+                  fill="none"
+                ></circle>
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="2"
+                  stroke="currentColor"
+                  fill="none"
+                ></circle>
+                <circle
+                  cx="12"
+                  cy="19"
+                  r="2"
+                  stroke="currentColor"
+                  fill="none"
+                ></circle>
+              </svg>
+            </button>
+
+            <div class="header-center">
+              <h2 id="pageTitle" class="section-title">Portfolio</h2>
+              <nav id="breadcrumbs" class="breadcrumbs"></nav>
+            </div>
+          </div>
+        </div>
+
+        <section class="preview-scroll">
+          <div id="workspace" class="workspace">
+            <div id="content" class="portfolio-grid"></div>
+
+            <aside id="previewPane" class="preview-pane" hidden>
+              <div id="previewResizer" class="resizer" aria-hidden="true"></div>
+
+              <div class="preview-body">
+                <div class="preview-media">
+                  <button
+                    id="previewCloseBtn"
+                    class="close-btn"
+                    type="button"
+                    aria-label="Close"
+                  ></button>
+                  <img id="previewImage" alt="" />
+                </div>
+
+                <div id="previewError" class="preview-error" hidden>
+                  Failed to upload image
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <!-- Lightbox / Media Slider -->
+    <div
+      id="mediaLightbox"
+      class="mlb"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+      hidden
+    >
+      <div class="mlb-backdrop"></div>
+      <button
+        id="mlbClose"
+        class="mlb-btn mlb-close"
+        aria-label="Close"
+      ></button>
+
+      <button id="mlbPrev" class="mlb-btn mlb-prev" aria-label="Previous slide">
+        <svg viewBox="0 0 40 100" width="40" height="100" aria-hidden="true">
+          <path
+            d="M25 20 L10 50 L25 80"
+            stroke="currentColor"
+            stroke-width="1.5"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+      </button>
+
+      <button id="mlbNext" class="mlb-btn mlb-next" aria-label="Next slide">
+        <svg viewBox="0 0 40 100" width="40" height="100" aria-hidden="true">
+          <path
+            d="M15 20 L30 50 L15 80"
+            stroke="currentColor"
+            stroke-width="1.5"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+      </button>
+
+      <div class="mlb-stage" id="mlbStage" aria-live="polite"></div>
+      <div class="mlb-bottom">
+        <div class="mlb-caption" id="mlbCaption"></div>
+        <div class="mlb-counter" id="mlbCounter"></div>
+      </div>
+    </div>
+
+    <!-- Оставляем относительные пути, как было -->
+    <script src="js/header.js"></script>
+    <script src="js/admin-actions.js"></script>
+    <script src="js/admin-portfolio.js"></script>
+    <script src="js/admin-ui.js"></script>
+    <script src="js/error-handler.js"></script>
+    <!-- <script src="js/app.js"></script> -->
+  </body>
+</html>

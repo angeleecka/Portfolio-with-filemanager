@@ -1,0 +1,476 @@
+/* =========================
+   1. Общий контейнер контента
+   ========================= */
+
+/* Прокручиваемая зона с категориями и файлами */
+.preview-scroll {
+  height: 100%;
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 60px);
+  padding: 10px;
+  box-sizing: border-box;
+  min-height: 0;
+}
+
+#content {
+  flex: 1 1 auto;
+  min-width: 240px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* =========================
+   2. Сетка категорий и галереи файлов
+   (одинаковая сетка для category-list и gallery)
+   ========================= */
+#content .category-list,
+#content .gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+  padding: 0;
+}
+
+/* =========================
+   3. Карточка категории (папка)
+   ========================= */
+.category-card {
+  display: block;
+  position: relative;
+  aspect-ratio: 3 / 2;
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  background: var(--card-bg);
+  box-shadow: 0 1px 6px var(--shadow-card);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.category-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px var(--shadow-card-lg);
+}
+
+/* Заголовок внутри карточки */
+.category-card .card-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 12px 14px;
+  font: 600 16px/1.2 "Roboto Condensed", sans-serif;
+  color: var(--color-text-on-accent);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.45) 60%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+}
+
+/* Фоновое изображение в карточке */
+.category-card .card-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.88);
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+.category-card:hover .card-image {
+  transform: scale(1.05);
+  filter: brightness(0.98);
+}
+
+/* =========================
+   4. Ячейки файлов (файлы в галерее)
+   ========================= */
+#content .cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Превью файлов (картинки/видео) */
+#content .cell > img,
+#content .cell > video {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+/* Подпись под файлами */
+#content .cell .file-caption {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+  text-align: center;
+  word-break: break-word;
+}
+
+/* Если вы используете разные классы для файлов и папок, 
+   используйте их: */
+.js-file.selected,
+.category-card.selected {
+  outline: 3px solid var(--previewPane-resizing);
+  outline-offset: 3px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* =========================
+   6. Область предпросмотра справа
+   ========================= */
+#workspace {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.portfolio-grid {
+  flex: 1;
+  overflow: auto;
+  width: 100%;
+  margin: 0;
+}
+
+/* --- Панель предпросмотра --- */
+#previewPane {
+  flex: 0 0 0;
+  width: 0;
+  max-width: 80%;
+  position: relative;
+  border-left: 1px solid var(--color-primary-600);
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background: var(--surface-1);
+  display: none;
+  flex-direction: column;
+  margin-left: 8px;
+  transition: flex-basis 0.25s ease, width 0.25s ease; /* плавное раскрытие */
+}
+/* --- Ручка-резайзер --- */
+#previewResizer {
+  position: absolute;
+  top: 0;
+  left: -6px; /* наезжаем на область плиток */
+  width: 8px; /* удобная зона захвата */
+  height: 100%;
+  cursor: col-resize; /*ew-resize;*/
+  z-index: 20;
+  /* background: rgba(255,0,0,0.2); /* подсветка для отладки */
+  background: none; /* Убираем отладочный фон */
+}
+#previewResizer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 5px;
+  width: 2px;
+  background: var(--previewResizer);
+}
+
+#previewPane.active {
+  display: flex;
+  flex: 0 1 400px; /* Позволяет панели сжиматься до 0 и растягиваться до 400px, но не больше */
+  width: auto; /* убираем фиксированную ширину */
+}
+
+#previewPane[hidden] {
+  display: none !important;
+  flex: 0 0 0 !important;
+  width: 0 !important;
+}
+/* во время перетаскивания */
+#previewPane.resizing {
+  user-select: none;
+  cursor: ew-resize;
+}
+#previewPane.resizing #previewResizer::after {
+  background: var(--previewPane-resizing);
+}
+
+/* --- Тело предпросмотра --- */
+.preview-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  max-height: 100%;
+  position: relative;
+}
+
+/* Враппер под картинку: размер = размеру картинки */
+.preview-media {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  max-height: 90vh; /* должно совпадать с ограничением для img */
+}
+
+/* Крестик — тонкий и большой, как раньше */
+.close-btn,
+#previewCloseBtn {
+  all: unset;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  z-index: 10;
+}
+.close-btn::before,
+.close-btn::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 1.5px;
+  background: var(--close-btn-1);
+  transform-origin: center;
+  transition: background-color 0.2s, transform 0.2s;
+}
+.close-btn::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.close-btn::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.close-btn:hover::before,
+.close-btn:hover::after {
+  background: var(--close-btn-2);
+  transform: translate(-50%, -50%) scale(1.1) rotate(45deg);
+}
+.close-btn:hover::after {
+  transform: translate(-50%, -50%) scale(1.1) rotate(-45deg);
+}
+
+/* --- Картинка в предпросмотре --- */
+#previewImage {
+  display: block;
+  max-width: 100%;
+  max-height: 90vh; /* ключ: ограничение по высоте окна */
+  object-fit: contain;
+  border-radius: 6px;
+  margin: 0;
+}
+
+/* Контент в предпросмотре: картинка или видео */
+#previewPane img,
+#previewPane video {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* влезает целиком */
+  display: flex;
+  margin: 0 auto;
+}
+
+/* Lightbox для мобильных экранов (по умолчанию скрыт) */
+.mlb[hidden] {
+  display: none;
+}
+
+.mlb {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: var(--mlb-background);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.mlb-stage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.mlb-stage img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Навигация */
+
+/* Устанавливаем базовые стили для всех кнопок */
+.mlb-btn {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 60px;
+  height: 120px;
+  cursor: pointer;
+  color: var(--color-text-icon);
+}
+
+.mlb-prev {
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mlb-next {
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mlb-btn svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Двигаем стрелки внутри зоны */
+.mlb-prev svg {
+  transform: translateX(-20%);
+}
+
+.mlb-next svg {
+  transform: translateX(20%);
+}
+.mlb-btn:hover path {
+  stroke: var(--color-primary);
+}
+
+/* Крестик закрытия */
+
+.mlb-close {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  font: inherit;
+  color: inherit;
+  line-height: 1;
+
+  outline: none;
+  box-shadow: none;
+
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+}
+
+.mlb-close::before,
+.mlb-close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 1.5px;
+  background-color: var(--color-text-icon);
+  transform-origin: center;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.mlb-close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.mlb-close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.mlb-close:hover::before,
+.mlb-close:hover::after {
+  background-color: var(--close-btn-1);
+  transform: translate(-50%, -50%) scale(1.1) rotate(45deg);
+}
+.mlb-close:hover::after {
+  transform: translate(-50%, -50%) scale(1.1) rotate(-45deg);
+}
+
+/* Подпись и счётчик */
+.mlb-bottom {
+  color: var(--color-text-icon);
+  padding: 10px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  body.hero-page {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
+
+/* ── Admin layout invariants (desktop) ────────────────────── */
+body.admin-body {
+  overflow: hidden;
+  height: 100vh;
+}
+
+main.admin-body {
+  display: flex;
+  gap: var(--space-4);
+  height: calc(100vh - var(--admin-header-h));
+  overflow: hidden;
+}
+
+main.admin-body > aside.admin-explorer {
+  position: relative;
+  transform: none !important;
+  box-shadow: none;
+  border-right: none;
+  width: var(--admin-drawer-w);
+  flex: 0 0 var(--admin-drawer-w);
+}
+
+main.admin-body > section.admin-preview {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Мобилка: off-canvas как раньше */
+@media (max-width: 1023.98px) {
+  body.admin-body {
+    overflow: auto;
+    height: auto;
+  }
+  main.admin-body {
+    display: block;
+    height: auto;
+    overflow: visible;
+  }
+  .admin-explorer {
+    position: fixed;
+  }
+}
+/* i18n-wrapper neutral on admin */
+.admin-body [data-i18n] {
+  display: contents !important;
+}
