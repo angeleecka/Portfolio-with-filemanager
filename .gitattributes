@@ -1,17 +1,15 @@
-@"
+# Нормализуем переводы строк
 * text=auto eol=lf
 
-# Бинарники — без преобразования концов строк
+# Картинки и видео считаем бинарными (без диффов)
 *.png  binary
 *.jpg  binary
 *.jpeg binary
-*.gif  binary
 *.webp binary
+*.gif  binary
 *.mp4  binary
 *.webm binary
-*.woff binary
-*.woff2 binary
 
-# Текстовые ассеты — принудительно LF
-*.svg  text eol=lf
-"@ | Out-File -Encoding ascii .gitattributes
+# Эти файлы/артефакты без диффов
+data/portfolio.json -diff
+docs/swagger.json    -diff
