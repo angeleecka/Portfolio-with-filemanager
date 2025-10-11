@@ -152,8 +152,8 @@
   --admin-drawer-w: 320px;
 
   /* Z-index слои */
-  --z-header: 10;
-  --z-nav-toggle: 1000;
+  --z-header: 2000;
+  --z-nav-toggle: 2001;
 
   /* Элементы управления (кнопки, иконки) */
   --click-area: 44px;

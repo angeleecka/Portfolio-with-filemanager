@@ -20,13 +20,6 @@
   box-sizing: border-box;
 }
 
-/* чтобы один тап не вызывал двойной-тап-зум и жесты работали предсказуемо */
-#content .js-file,
-#content .gallery img,
-#content .gallery video {
-  touch-action: manipulation;
-}
-
 /* =========================
    2. Сетка категорий и галереи файлов
    (одинаковая сетка для category-list и gallery)
@@ -500,32 +493,30 @@
 }
 
 /* ── Admin layout invariants (desktop) ────────────────────── */
-@media (min-width: 1024px) {
-  body.admin-body {
-    overflow: hidden;
-    height: 100vh;
-  }
+body.admin-body {
+  overflow: hidden;
+  height: 100vh;
+}
 
-  main.admin-body {
-    display: flex;
-    gap: var(--space-4);
-    height: calc(100vh - var(--admin-header-h));
-    overflow: hidden;
-  }
+main.admin-body {
+  display: flex;
+  gap: var(--space-4);
+  height: calc(100vh - var(--admin-header-h));
+  overflow: hidden;
+}
 
-  main.admin-body > aside.admin-explorer {
-    position: relative;
-    transform: none !important;
-    box-shadow: none;
-    border-right: none;
-    width: var(--admin-drawer-w);
-    flex: 0 0 var(--admin-drawer-w);
-  }
+main.admin-body > aside.admin-explorer {
+  position: relative;
+  transform: none !important;
+  box-shadow: none;
+  border-right: none;
+  width: var(--admin-drawer-w);
+  flex: 0 0 var(--admin-drawer-w);
+}
 
-  main.admin-body > section.admin-preview {
-    flex: 1;
-    min-width: 0;
-  }
+main.admin-body > section.admin-preview {
+  flex: 1;
+  min-width: 0;
 }
 
 /* Мобилка: off-canvas как раньше */

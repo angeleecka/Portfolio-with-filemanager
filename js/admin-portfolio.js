@@ -257,6 +257,8 @@ window.renderPortfolio = async function () {
     }
 
     window.attachPreviewHandlers?.();
+
+    initAdminContextMenu?.();
   } catch (e) {
     console.error("JSON loading error:", e);
   }
@@ -302,19 +304,51 @@ window.attachPreviewHandlers = function () {
   // файлы (ячейки)
   document.querySelectorAll("#content .js-file").forEach((el) => {
     const name = el.dataset.name;
+    const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
 
     el.addEventListener("click", (e) => {
-      // если клик по <a> с якорём — отдать браузеру/скроллу и не мешать
-      if (bypassIfAnchorNav(e)) return;
+      // пропускаем якорные ссылки
+      if (typeof bypassIfAnchorNav === "function" && bypassIfAnchorNav(e))
+        return;
 
-      e.preventDefault(); // твоя логика выбора
-      clearSelection();
+      // Мобайл: открываем лайтбокс по ОДНОМУ тапу
+      if (isMobile()) {
+        e.preventDefault();
+        // выделение + автоподстановка имени
+        document
+          .querySelectorAll("#content .selected")
+          .forEach((n) => n.classList.remove("selected"));
+        el.classList.add("selected");
+        try {
+          window.selectedFileName = name;
+        } catch {}
+        if (typeof insertFileName === "function") insertFileName(name);
+
+        if (typeof openLightbox === "function") {
+          const all = Array.from(
+            document.querySelectorAll("#content .js-file")
+          );
+          const idx = all.indexOf(el);
+          openLightbox(idx >= 0 ? idx : 0);
+        }
+        return;
+      }
+
+      // Десктоп: только выделяем + заполняем поле; открытие — на dblclick
+      e.preventDefault();
+      document
+        .querySelectorAll("#content .selected")
+        .forEach((n) => n.classList.remove("selected"));
       el.classList.add("selected");
-      selectedFileName = name;
+      try {
+        window.selectedFileName = name;
+      } catch {}
+      if (typeof insertFileName === "function") insertFileName(name);
     });
 
     el.addEventListener("dblclick", () => {
-      showPreview(name);
+      if (isMobile()) return; // на мобилке dblclick не нужен
+      if (typeof showPreview === "function") showPreview(name);
     });
   });
 
@@ -422,11 +456,17 @@ let mlbIndex = 0;
 function openLightbox(index) {
   mlbItems = Array.from(document.querySelectorAll("#content .js-file"));
   mlbIndex = index;
+
+  // 🔧 важно: на мобилке очищаем состояние правой панели, чтобы потом при ресайзе не «торчал» ресайзер
+  if (typeof hidePreview === "function") hidePreview();
+
   updateLightbox();
   if (mediaLightbox) {
     mediaLightbox.hidden = false;
     mediaLightbox.setAttribute("aria-hidden", "false");
   }
+  // 🔧 метка, что лайтбокс открыт
+  document.body.classList.add("mlb-open");
 }
 
 function updateLightbox() {
@@ -446,6 +486,8 @@ function closeLightbox() {
   if (!mediaLightbox) return;
   mediaLightbox.hidden = true;
   mediaLightbox.setAttribute("aria-hidden", "true");
+  // 🔧 сняли метку
+  document.body.classList.remove("mlb-open");
 }
 
 if (mlbClose) mlbClose.addEventListener("click", closeLightbox);
@@ -463,6 +505,35 @@ if (mlbNext)
       updateLightbox();
     }
   });
+
+function syncPreviewWithViewport() {
+  const pane = document.getElementById("previewPane");
+  const img = document.getElementById("previewImage");
+  if (!pane) return;
+
+  const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+
+  if (!isDesktop) {
+    // мобилка: панель всегда прячем и сбрасываем inline-стили
+    pane.classList.remove("active");
+    pane.hidden = true;
+    pane.style.width = "";
+    pane.style.flex = "";
+    return;
+  }
+
+  // десктоп: если изображения нет — панель скрыта и чистая
+  if (!img || !img.getAttribute("src")) {
+    pane.classList.remove("active");
+    pane.hidden = true;
+    pane.style.width = "";
+    pane.style.flex = "";
+  }
+}
+
+// первичная синхронизация и при ресайзе
+document.addEventListener("DOMContentLoaded", syncPreviewWithViewport);
+window.addEventListener("resize", syncPreviewWithViewport);
 
 // --- старт ---
 document.addEventListener("DOMContentLoaded", () => {
@@ -514,3 +585,174 @@ document.addEventListener("DOMContentLoaded", () => {
 window.insertFileName = function (name) {
   selectedFileName = name;
 };
+
+// ===== контекстное меню + long-press =====
+(function () {
+  let menu, lpTimer;
+
+  function ensureMenu() {
+    if (menu) return menu;
+    menu = document.createElement("div");
+    menu.className = "admin-ctx";
+    menu.innerHTML = `
+      <button data-act="open">Open / Preview</button>
+      <button data-act="rename">Rename…</button>
+      <button data-act="delete">Delete…</button>
+    `;
+    document.body.appendChild(menu);
+
+    // закрытие
+    const close = () => menu.classList.remove("open");
+    window.addEventListener("scroll", close, { passive: true });
+    window.addEventListener("resize", close);
+    document.addEventListener("click", (e) => {
+      if (!menu.contains(e.target)) close();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
+
+    return menu;
+  }
+
+  function showMenu(x, y, targetEl) {
+    const name =
+      targetEl?.dataset?.name ||
+      targetEl?.querySelector?.(".card-title")?.textContent?.trim();
+    if (!name) return;
+
+    const m = ensureMenu();
+    m.dataset.name = name;
+
+    // 1) Показать «невидимо» для измерения (без мигания)
+    const prevVis = m.style.visibility;
+    m.style.visibility = "hidden";
+    m.classList.add("open");
+    m.style.left = "0px";
+    m.style.top = "0px";
+
+    // 2) Ограничения + высокий z-index, чтобы не обрезалось
+    m.style.maxWidth = "min(260px, 90vw)";
+    m.style.maxHeight = window.innerHeight - 16 + "px";
+    m.style.overflowY = "auto";
+    m.style.zIndex = "3000";
+
+    const pad = 8;
+    const r = m.getBoundingClientRect();
+    let left = x + pad;
+    let top = y + pad;
+
+    // 3) Прижать по горизонтали
+    if (left + r.width > window.innerWidth - pad) {
+      left = Math.max(pad, window.innerWidth - r.width - pad);
+    }
+
+    // 4) Flip вверх, если снизу не влезает (с финальным прижатием)
+    if (top + r.height > window.innerHeight - pad) {
+      const above = y - r.height - pad;
+      top =
+        above >= pad
+          ? above
+          : Math.max(pad, window.innerHeight - r.height - pad);
+    }
+
+    m.style.left = left + "px";
+    m.style.top = top + "px";
+    m.style.visibility = prevVis || "visible";
+
+    // 5) Действия (оставил как у тебя)
+    m.onclick = async (e) => {
+      const act = e.target?.dataset?.act;
+      if (!act) return;
+      e.stopPropagation();
+
+      document
+        .querySelectorAll("#content .selected")
+        .forEach((n) => n.classList.remove("selected"));
+      targetEl.classList?.add("selected");
+      if (typeof insertFileName === "function") insertFileName(name);
+
+      if (act === "open") {
+        if (window.matchMedia("(max-width: 768px)").matches) {
+          const all = Array.from(
+            document.querySelectorAll("#content .js-file")
+          );
+          const idx = all.indexOf(targetEl);
+          if (idx >= 0 && typeof openLightbox === "function") openLightbox(idx);
+        } else {
+          if (typeof showPreview === "function") showPreview(name);
+        }
+      } else if (act === "rename") {
+        const ro = document.getElementById("renameOld");
+        const rn = document.getElementById("renameNew");
+        if (ro) ro.value = name;
+        rn?.focus();
+      } else if (act === "delete") {
+        const del = document.getElementById("deleteName");
+        if (del) {
+          del.value = name;
+          del.focus();
+        }
+      }
+
+      m.classList.remove("open");
+    };
+
+    // Закрытие по клику вне/ESC (чтобы меню не «зависало»)
+    const close = () => {
+      m.classList.remove("open");
+      document.removeEventListener("click", onDoc, { capture: true });
+      document.removeEventListener("keydown", onKey);
+    };
+    const onDoc = (e) => {
+      if (!m.contains(e.target)) close();
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") close();
+    };
+
+    // Клик-вне — после текущего тика, чтобы не съесть клик по самому меню
+    setTimeout(() => {
+      document.addEventListener("click", onDoc, { capture: true, once: true });
+    }, 0);
+    document.addEventListener("keydown", onKey, { once: true });
+  }
+
+  function bindContextFor(el) {
+    // ПКМ
+    el.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      showMenu(e.clientX, e.clientY, el);
+    });
+
+    // Long-press (мобилка ~550мс)
+    el.addEventListener(
+      "touchstart",
+      (e) => {
+        if (lpTimer) clearTimeout(lpTimer);
+        const touch = e.touches[0];
+        lpTimer = setTimeout(() => {
+          showMenu(touch.clientX, touch.clientY, el);
+        }, 550);
+      },
+      { passive: true }
+    );
+
+    ["touchend", "touchcancel", "touchmove"].forEach((type) => {
+      el.addEventListener(
+        type,
+        () => {
+          if (lpTimer) clearTimeout(lpTimer);
+        },
+        { passive: true }
+      );
+    });
+  }
+
+  // вызывать после рендера миниатюр
+  window.initAdminContextMenu = function () {
+    document
+      .querySelectorAll("#content .js-file, #content .category-card")
+      .forEach(bindContextFor);
+  };
+})();
