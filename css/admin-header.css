@@ -95,3 +95,15 @@
 [data-i18n] {
   display: contents; /* “растворяет” обёртку, оставляя только текст */
 }
+
+.admin-body #header {
+  z-index: 2000;
+}
+.admin-body #header nav {
+  z-index: 2001;
+}
+.admin-body #header .nav-toggle,
+.admin-body .admin-drawer-btn {
+  position: relative;
+  z-index: 2002;
+}
