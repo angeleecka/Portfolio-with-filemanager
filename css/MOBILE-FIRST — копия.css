@@ -258,9 +258,9 @@ body.hero-page {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start; /* ← было center */
   justify-content: center;
-  text-align: center;
+  text-align: left; /* ← было center */
   padding: var(--space-1) var(--space-2); /* 4px 8px -> var(--space-1) var(--space-2) */
 }
 
@@ -272,6 +272,7 @@ body.hero-page {
   font-size: 0.9rem; /* Оставил, нет переменной */
   margin-top: var(--space-2); /* 6px -> var(--space-2) */
   color: var(--color-primary); /* #a67e5a -> var(--color-primary) */
+  text-align: left;
 }
 
 .breadcrumbs a {
