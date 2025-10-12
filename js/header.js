@@ -6,96 +6,98 @@
   document.addEventListener(
     "DOMContentLoaded",
     () => {
-      const header = document.querySelector("#header");
-      // не активируем sticky, если админка ИЛИ явно запретили
-      // Админка есть? да. Но бургер всё равно должен работать.
-      const isAdmin = !!document.querySelector(".admin-body");
       const headerEl = document.querySelector("#header");
-      if (!header || isAdmin || header.hasAttribute("data-no-sticky")) return;
+      if (!headerEl) return;
 
-      // --- режимы: hero / trigger / solid ---
-      const heroEl = document.querySelector("#hero");
-      const triggerEl = document.querySelector("#sticky-trigger");
-      const mode = heroEl ? "hero" : triggerEl ? "trigger" : "solid";
+      // Админка помечена <main class="admin-body">, а не на <body>
+      const isAdmin = !!document.querySelector("main.admin-body");
+      // sticky отключаем в админке или если стоит data-no-sticky на #header
+      const skipSticky = isAdmin || headerEl.hasAttribute("data-no-sticky");
 
-      // helperы для переключения классов (общая анимация/фон у тебя уже в CSS)
-      const setStickyOn = () => headerEl.classList.add("sticky", "visible");
-      const setStickyOff = () => {
-        headerEl.classList.remove("visible");
-        headerEl.addEventListener(
-          "transitionend",
-          () => {
-            if (!headerEl.classList.contains("visible"))
-              headerEl.classList.remove("sticky");
-          },
-          { once: true }
-        );
-      };
+      // ── 1) Липкий хедер (включаем только если НЕ запрещён) ───────────────
+      if (!skipSticky) {
+        const heroEl = document.querySelector("#hero");
+        const triggerEl = document.querySelector("#sticky-trigger");
+        const mode = heroEl ? "hero" : triggerEl ? "trigger" : "solid";
 
-      // --- 1) Липкий хедер по сценариям ---
-      if (!isAdmin) {
+        const setStickyOn = () => headerEl.classList.add("sticky", "visible");
+        const setStickyOff = () => {
+          headerEl.classList.remove("visible");
+          headerEl.addEventListener(
+            "transitionend",
+            () => {
+              if (!headerEl.classList.contains("visible")) {
+                headerEl.classList.remove("sticky");
+              }
+            },
+            { once: true }
+          );
+        };
+
         if (mode === "hero" || mode === "trigger") {
           const observed = mode === "hero" ? heroEl : triggerEl;
-          const io = new IntersectionObserver(
-            (entries) => {
-              entries.forEach((entry) => {
-                if (!entry.isIntersecting) setStickyOn();
-                else setStickyOff();
-              });
-            },
-            {
-              // Чуть «подтягиваем» момент срабатывания, чтобы переход выглядел естественно
-              threshold: 0,
-              rootMargin: "0px 0px 0px 0px",
-            }
-          );
-          if (observed) io.observe(observed);
-          // на случай, если пользователь перезагрузил страницу уже прокрученной:
+          if (observed) {
+            const io = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (!entry.isIntersecting) setStickyOn();
+                  else setStickyOff();
+                });
+              },
+              { threshold: 0, rootMargin: "0px" }
+            );
+            io.observe(observed);
+          }
+          // На случай перезагрузки с прокруткой
           requestAnimationFrame(() => {
-            if (mode === "hero" && window.scrollY > (heroEl?.offsetHeight || 0))
-              setStickyOn();
             if (
-              mode === "trigger" &&
-              window.scrollY > (triggerEl?.getBoundingClientRect().top || 0)
-            )
+              mode === "hero" &&
+              window.scrollY > (heroEl?.offsetHeight || 0)
+            ) {
               setStickyOn();
+            }
+            if (mode === "trigger" && triggerEl) {
+              const top =
+                triggerEl.getBoundingClientRect().top + window.scrollY;
+              if (window.scrollY > top) setStickyOn();
+            }
           });
         } else {
-          // solid: липкий сразу, а «компактность» добавляем после небольшой прокрутки
+          // solid: липкий сразу, «компактность» после небольшой прокрутки
           setStickyOn();
           window.addEventListener(
             "scroll",
             () => {
-              // можешь включить/использовать .scrolled в CSS, если нужно
               headerEl.classList.toggle("scrolled", window.scrollY > 10);
             },
             { passive: true }
           );
         }
       }
-      // --- 2) Мобильное меню (бургер) ---
+
+      // ── 2) Мобильное меню (бургер) — ВСЕГДА активно ─────────────────────
       const navToggle = headerEl.querySelector(".nav-toggle");
       const navMenu = headerEl.querySelector("nav");
 
       if (navToggle && navMenu) {
-        navToggle.addEventListener("click", () => {
+        navToggle.addEventListener("click", (evt) => {
           navMenu.classList.toggle("is-open");
           navToggle.classList.toggle("open");
+          evt.stopPropagation();
         });
-        // клик вне меню — закрыть
+
+        // Клик вне меню — закрыть
         document.addEventListener("click", (evt) => {
+          if (!navMenu.classList.contains("is-open")) return;
           const insideMenu = navMenu.contains(evt.target);
           const onToggle = navToggle.contains(evt.target);
-          if (
-            !insideMenu &&
-            !onToggle &&
-            navMenu.classList.contains("is-open")
-          ) {
+          if (!insideMenu && !onToggle) {
             navMenu.classList.remove("is-open");
             navToggle.classList.remove("open");
           }
         });
-        // переход по якорям — закрыть меню (мобайл UX)
+
+        // Переход по якорям — закрыть меню (мобайл UX)
         navMenu.addEventListener("click", (evt) => {
           const a = evt.target.closest("a");
           if (!a) return;
@@ -106,18 +108,14 @@
         });
       }
 
-      // --- 3) Подсветка активной ссылки (учитываем index.html по умолчанию) ---
+      // ── 3) Подсветка активной ссылки (в админке пропускаем) ──────────────
       if (!isAdmin) {
         const current =
           window.location.pathname.split("/").pop() || "index.html";
         headerEl.querySelectorAll("nav a").forEach((link) => {
-          const linkPath = link.getAttribute("href");
-          if (!linkPath) return;
-          const linkFile = linkPath.split("#")[0]; // игнорируем якорь
-          if (
-            linkFile === current ||
-            (linkFile === "index.html" && current === "")
-          ) {
+          const href = link.getAttribute("href") || "";
+          const file = href.split("#")[0]; // игнорируем якорь
+          if (file === current || (file === "index.html" && current === "")) {
             link.classList.add("active-link");
           }
         });

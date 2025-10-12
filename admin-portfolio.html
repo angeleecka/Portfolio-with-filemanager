@@ -11,7 +11,9 @@
 
     <link rel="stylesheet" href="css/variables.css" />
     <link rel="stylesheet" href="css/main-styles.css" />
-    <link rel="stylesheet" href="css/admin-header.css" />
+    <link rel="stylesheet" href="css/header-contrast.css" />
+    <!--  <link rel="stylesheet" href="css/admin-header.css" /> -->
+
     <link rel="stylesheet" href="css/MOBILE-FIRST.css" />
     <link rel="stylesheet" href="css/admin-portfolio-desktop.css" />
     <!-- <link rel="stylesheet" href="css/modalPass.css"> -->
@@ -29,12 +31,18 @@
     <link rel="icon" href="favicon.png" type="image/png" />
   </head>
 
-  <body class="hero-page">
-    <header id="header" class="header headerRelative" data-no-sticky>
+  <body>
+    <header
+      id="header"
+      class="header headerRelative portfolio-header"
+      data-no-sticky
+    >
       <div class="logo">FANTASY</div>
 
       <button class="nav-toggle" aria-label="Open menu">
-        <span></span><span></span><span></span>
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
 
       <nav id="main-nav" aria-label="Main navigation">
@@ -134,22 +142,22 @@
                   cx="12"
                   cy="5"
                   r="2"
-                  stroke="currentColor"
-                  fill="none"
+                  stroke="none"
+                  fill="currentColor"
                 ></circle>
                 <circle
                   cx="12"
                   cy="12"
                   r="2"
-                  stroke="currentColor"
-                  fill="none"
+                  stroke="none"
+                  fill="currentColor"
                 ></circle>
                 <circle
                   cx="12"
                   cy="19"
                   r="2"
-                  stroke="currentColor"
-                  fill="none"
+                  stroke="none"
+                  fill="currentColor"
                 ></circle>
               </svg>
             </button>
@@ -238,7 +246,6 @@
       </div>
     </div>
 
-    <!-- Оставляем относительные пути, как было -->
     <script src="js/header.js"></script>
     <script src="js/admin-actions.js"></script>
     <script src="js/admin-portfolio.js"></script>

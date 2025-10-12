@@ -614,6 +614,35 @@ window.insertFileName = function (name) {
 
     return menu;
   }
+  // авто-открыть левую панель на мобилке и сфокусироваться на нужной группе
+  function openDrawerAndFocus(which /* 'rename' | 'delete' */) {
+    const explorer = document.querySelector(".admin-explorer");
+    if (!explorer) return;
+
+    // открываем только на мобилке (у тебя десктоп с 1024px)
+    if (!window.matchMedia("(max-width: 1023px)").matches) return;
+
+    explorer.classList.add("is-open");
+
+    // дождаться применения класса и перерисовки — потом фокус/скролл
+    const focusAndScroll = () => {
+      if (which === "rename") {
+        const ro = document.getElementById("renameOld");
+        const rn = document.getElementById("renameNew");
+        const row = document.querySelector(".rename-group");
+        ro && ro.scrollIntoView({ block: "center", behavior: "smooth" });
+        (rn || ro)?.focus();
+      } else if (which === "delete") {
+        const del = document.getElementById("deleteName");
+        const row = document.querySelector(".delete-group");
+        row && row.scrollIntoView({ block: "center", behavior: "smooth" });
+        del?.focus();
+      }
+    };
+
+    // два rAF — надежно после изменения layout/transition
+    requestAnimationFrame(() => requestAnimationFrame(focusAndScroll));
+  }
 
   function showMenu(x, y, targetEl) {
     const name =
@@ -686,12 +715,14 @@ window.insertFileName = function (name) {
         const ro = document.getElementById("renameOld");
         const rn = document.getElementById("renameNew");
         if (ro) ro.value = name;
-        rn?.focus();
+        // 👉 автоматически открыть панель и сфокусироваться
+        openDrawerAndFocus("rename");
       } else if (act === "delete") {
         const del = document.getElementById("deleteName");
         if (del) {
           del.value = name;
-          del.focus();
+          // 👉 автоматически открыть панель и сфокусироваться
+          openDrawerAndFocus("delete");
         }
       }
 
