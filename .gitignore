@@ -35,4 +35,5 @@ data/portfolio.json
 scripts/_tmp/
 
 # swagger-редакторы/кеши
+docs/
 docs/*.tmp

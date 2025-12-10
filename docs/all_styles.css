@@ -1,0 +1,1284 @@
+/* variables.css */
+
+:root {
+  /* ======================================= */
+  /* 🎨 Базовые токены (примитивы) */
+  /* Эти переменные содержат конкретные значения. Их не нужно менять часто. */
+  /* ======================================= */
+
+  /* Цвета */
+  --color-primary: #c7956a;
+  --color-primary-600: #a67e5a;
+  --color-secondary: #4d3323;
+  --color-accent-brown: #a67c52;
+  --color-black: #000;
+
+  /* Тексты */
+  --color-text-body: #222;
+  --color-text-strong: #333;
+  --color-text-muted: #555;
+  --color-text-on-accent: #fff;
+  --color-text-icon: #fff;
+
+  /* Поверхности */
+  --surface-1: #fff;
+  --surface-2: #f4f4f4;
+  --surface-primary-light: #ede8d0;
+  --card-bg: #f3f3f3;
+  --surface-menu: rgba(0, 0, 0, 0.8);
+  --surface-hero-overlay: rgba(0, 0, 0, 0.3);
+  --surface-sticky: rgba(0, 0, 0, 0.85);
+  --previewResizer: #ddd;
+  --previewPane-resizing: #c96;
+  --mlb-background: rgba(0, 0, 0, 0.9);
+
+  /* Уведомления */
+  --toast-success-bg: #2e7d32;
+  --toast-error-bg: #c62828;
+  --toast-info-bg: #1565c0;
+  --toast-warning-bg: #ed6c02;
+
+  /* Типографика */
+  --font-body: "Roboto Condensed", sans-serif;
+  --font-heading: "Poiret One", sans-serif;
+  --fs-base: 16px;
+  --fs-p: 1rem;
+  --fs-h1: 3rem;
+  --fs-h2: 2rem;
+  --fs-h3: 1.5rem;
+  --fs-nav-link: 1.5rem;
+  --lh-base: 1.5;
+  --lh-heading: 1.2;
+  --nav-font-size-mobile: 1.5rem;
+  --nav-line-height-mobile: 2;
+  --nav-font-weight: 100;
+  --nav-font-size-landscape: 0.9rem;
+  --nav-font-size-desktop: 1rem;
+  --nav-line-height-desktop: 1.3;
+  --logo-font-size: 2em;
+
+  /* Отступы */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-sm: var(--space-2);
+  --space-md: var(--space-4);
+  --space-lg: var(--space-6);
+  --nav-gap-desktop: 10px;
+  --nav-gap-toggle: 6px;
+  --nav-padding-landscape-y: 0.7rem;
+  --nav-padding-landscape-x: 1.5rem;
+  --nav-padding-desktop-y: 8px;
+  --nav-padding-desktop-x: 14px;
+  --header-padding: 5px 20px;
+  --header-padding-desktop: 5px 20px;
+  --header-padding-sticky: 5px 20px;
+
+  /* Радиусы */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+  --radius-round: 50%;
+
+  /* Тени */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+  --shadow-card: 0 4px 8px rgba(0, 0, 0, 0.08);
+  --shadow-card-lg: 0 8px 16px rgba(0, 0, 0, 0.12);
+  --shadow-sticky: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-text: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  --shadow-header: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  /* Анимации */
+  --dur-quick: 0.3s;
+  --dur-normal: 0.4s;
+  --easing: ease;
+  --easing-io: ease-in-out;
+  --hover-translate-sm: -4px;
+
+  /* ======================================= */
+  /* 🚀 Семантические токены (токены компонентов) */
+  /* Эти переменные описывают назначение, используя базовые токены. */
+  /* ======================================= */
+
+  /* Контейнеры */
+  --container-max: 1200px;
+  --container-narrow: 800px;
+  --gallery-img-height: 300px;
+
+  /* Навигация */
+  --scroll-down-arrow: rgba(255, 255, 255, 0.7);
+  --close-btn-1: #c00;
+  --close-btn-2: silver;
+  --nav-hover-bg: rgba(255, 255, 255, 0.1);
+  --nav-active-bg: rgba(255, 255, 255, 0.1);
+  --nav-active-bg-contrast: rgba(199, 149, 106, 0.4);
+  --nav-hover-color: var(--surface-1);
+  --nav-active-color: var(--surface-1);
+  --nav-active-color-contrast: var(--color-secondary);
+  --nav-border-active: 1px solid var(--color-primary-600);
+  --menu-top-offset: 12%;
+  --menu-right-offset: 4%;
+  --menu-right-offset-2: 3%;
+  --menu-right-offset-3: 2%;
+  --menu-padding-top: 50px;
+  --menu-width: 190px;
+  --burger-size: 45px;
+  --burger-gap: 6px;
+  --burger-line-width: 24px;
+  --burger-line-height: 2px;
+  --radius-pill: 2px;
+  --burger-sticky-right: 1rem;
+  --burger-sticky-bottom: -12px;
+  --burger-open-top: 1rem;
+  --burger-open-right: 1rem;
+  --header-border-size: 4px;
+  --stripe-thickness: 2px;
+  --logo-sticky-offset: 4%;
+
+  /* Компоненты */
+  --card-max-width: 320px;
+  --card-padding: 1rem;
+  --btn-bg: var(--color-accent-brown);
+  --btn-text: var(--color-text-on-accent);
+  --btn-border: 1px solid var(--surface-1);
+  --btn-padding: 0.8rem 1.5rem;
+  --map-height: 450px;
+  --intro-avatar-size: min(70vw, 400px);
+  --admin-header-h: 64px;
+  --admin-drawer-w: 320px;
+
+  /* Z-index слои */
+  --z-header: 2000;
+  --z-nav-toggle: 2001;
+
+  /* Элементы управления (кнопки, иконки) */
+  --click-area: 44px;
+
+  /* Скорость анимаций */
+  --dur-quick: 0.2s;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --gallery-img-height: 200px;
+  }
+}
+
+/*  admin-header.css */
+/* ======================== */
+/* Базовый хедер            */
+/* ======================== */
+.headerRelative {
+  position: relative; /* Или static, если нужно, чтобы он был полностью в потоке */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: var(--z-header);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: calc(var(--space-4) / 5) var(--space-6);
+  background: none;
+}
+
+/* ======================== */
+/* Цвета через переменные   */
+/* ======================== */
+.header {
+  /* цвет текста/логотипа в обычном состоянии */
+  --header-fg: var(--color-secondary);
+  /* цвет линий бургера в обычном состоянии */
+  --burger-color: var(--color-primary);
+}
+
+/* Липкий хедер */
+.header.sticky {
+  --header-fg: var(--color-text-on-accent); /* например, белый */
+  --burger-color: var(--color-text-on-accent); /* например, белый */
+}
+
+/* ======================== */
+/* Лого                     */
+/* ======================== */
+.logo {
+  color: var(--header-fg);
+}
+
+/* ======================== */
+/* Навигация                */
+/* ======================== */
+.nav-links a:hover {
+  background: var(--color-primary);
+  color: var(--nav-active-color);
+}
+
+.active-link a {
+  color: var(--nav-active-color);
+  border-left: 1px solid var(--color-secondary);
+  background: var(--color-primary);
+}
+
+/* ======================== */
+/* Кнопка-бургер            */
+/* ======================== */
+.nav-toggle {
+  width: var(
+    --click-area
+  ); /* Используем нашу переменную для кликабельной области */
+  height: var(--click-area);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--nav-gap-toggle);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: var(--z-nav-toggle);
+}
+
+/* Линии бургера */
+.nav-toggle span {
+  display: block;
+  width: var(--burger-line-width); /* Заменили 24px на переменную */
+  height: var(--burger-line-height); /* Заменили 2px на переменную */
+  border-radius: var(--radius-pill); /* Заменили 2px на переменную */
+  background: var(--burger-color);
+  transition: background var(--dur-quick); /* Заменили 0.2s на переменную */
+}
+
+/* ======================== */
+/* Десктопное поведение     */
+/* ======================== */
+@media (min-width: 769px) {
+  .nav-toggle {
+    display: none; /* скрываем бургер */
+  }
+}
+
+/* i18n wrappers should be layout-neutral */
+[data-i18n] {
+  display: contents; /* “растворяет” обёртку, оставляя только текст */
+}
+
+.admin-body #header {
+  z-index: 2000;
+}
+.admin-body #header nav {
+  z-index: 2001;
+}
+.admin-body #header .nav-toggle,
+.admin-body .admin-drawer-btn {
+  position: relative;
+  z-index: 2002;
+}
+
+/* ============================================================================ */
+
+/* =========================
+   1. Общий контейнер контента
+   ========================= */
+
+/* Прокручиваемая зона с категориями и файлами */
+.preview-scroll {
+  height: 100%;
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 60px);
+  padding: 10px;
+  box-sizing: border-box;
+  min-height: 0;
+}
+
+#content {
+  flex: 1 1 auto;
+  min-width: 240px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* чтобы один тап не вызывал двойной-тап-зум и жесты работали предсказуемо */
+#content .js-file,
+#content .gallery img,
+#content .gallery video {
+  touch-action: manipulation;
+}
+
+/* =========================
+     2. Сетка категорий и галереи файлов
+     (одинаковая сетка для category-list и gallery)
+     ========================= */
+#content .category-list,
+#content .gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+  padding: 0;
+}
+
+/* =========================
+     3. Карточка категории (папка)
+     ========================= */
+.category-card {
+  display: block;
+  position: relative;
+  aspect-ratio: 3 / 2;
+  border-radius: 12px;
+  cursor: pointer;
+  overflow: hidden;
+  text-decoration: none;
+  background: var(--card-bg);
+  box-shadow: 0 1px 6px var(--shadow-card);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.category-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px var(--shadow-card-lg);
+}
+
+/* Заголовок внутри карточки */
+.category-card .card-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 12px 14px;
+  font: 600 16px/1.2 "Roboto Condensed", sans-serif;
+  color: var(--color-text-on-accent);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.45) 60%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+}
+
+/* Фоновое изображение в карточке */
+.category-card .card-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.88);
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+.category-card:hover .card-image {
+  transform: scale(1.05);
+  filter: brightness(0.98);
+}
+
+/* подсветка папки во время DnD */
+.category-card.drop-hover {
+  outline: 2px dashed var(--color-primary);
+  outline-offset: 4px;
+}
+
+/* =========================
+     4. Ячейки файлов (файлы в галерее)
+     ========================= */
+#content .cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Превью файлов (картинки/видео) */
+#content .cell > img,
+#content .cell > video {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+/* Подпись под файлами */
+#content .cell .file-caption {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+  text-align: center;
+  word-break: break-word;
+}
+
+/* Если вы используете разные классы для файлов и папок, 
+     используйте их: */
+.js-file.selected,
+.category-card.selected {
+  outline: 3px solid var(--previewPane-resizing);
+  outline-offset: 3px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* =========================
+     6. Область предпросмотра справа
+     ========================= */
+/*#workspace {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    box-sizing: border-box;
+    height: 100%;
+    flex-direction: row;
+    overflow: hidden;
+  }*/
+#workspace {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  min-height: 0;
+}
+
+/*.portfolio-grid {
+    flex: 1;
+    overflow: auto;
+    width: 100%;
+    margin: 0;
+  }*/
+
+/* Левая колонка: даём сжиматься! (ключ к отсутствию горизонтального скролла) */
+.portfolio-grid {
+  flex: 1 1 auto;
+  min-width: 0; /* ← КРИТИЧЕСКИ ВАЖНО */
+  overflow: auto; /* свой скролл только тут */
+}
+/* --- Панель предпросмотра --- */
+/*#previewPane {
+    flex: 0 0 0;
+    width: 0;
+    max-width: 80%;
+    position: relative;
+    border-left: 1px solid var(--color-primary-600);
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    background: var(--surface-1);
+    display: none;
+    flex-direction: column;
+    margin-left: 8px;
+    transition: flex-basis 0.25s ease, width 0.25s ease;
+  }*/
+
+/* Правая колонка: панель предпросмотра */
+#previewPane,
+.preview-pane {
+  position: relative;
+  display: none; /* по умолчанию скрыта */
+  flex-direction: column; /* вертикальная колонка внутри */
+  overflow: visible; /* чтобы «ручка» не отрезалась */
+  padding-left: 10px; /* ← регулируй зазор здесь (10–14px) */
+  box-sizing: border-box;
+}
+
+/* --- Ручка-резайзер --- */
+#previewResizer {
+  position: absolute;
+  top: 0;
+  left: 0px; /*  наезжаем на область плиток */
+  width: 8px; /* удобная зона захвата */
+  height: 100%;
+  cursor: col-resize; /*ew-resize;*/
+  z-index: 50;
+  /* background: rgba(255,0,0,0.2); /* подсветка для отладки */
+  background: none; /* Убираем отладочный фон */
+}
+#previewResizer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 2px;
+  background: var(--previewResizer);
+}
+
+#previewPane.active {
+  display: flex;
+  flex: 0 1 400px; /* Позволяет панели сжиматься до 0 и растягиваться до 400px, но не больше */
+  width: auto; /* убираем фиксированную ширину */
+  min-width: 280px; /* совпадает с min в JS-ресайзере */
+}
+/* Активная панель: показываем и задаём базовую ширину */
+/*#previewPane.active,
+  .preview-pane.active {
+    display: flex;
+    flex: 0 0 400px;
+    width: auto;
+  }*/
+#previewPane[hidden] {
+  display: none !important;
+  flex: 0 0 0 !important;
+  width: 0 !important;
+}
+/* во время перетаскивания */
+#previewPane.resizing {
+  user-select: none;
+  cursor: ew-resize;
+}
+#previewPane.resizing #previewResizer::after {
+  background: var(--previewPane-resizing);
+}
+
+/* --- Тело предпросмотра --- */
+/*.preview-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    max-height: 100%;
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+  }*/
+
+.preview-body {
+  display: flex;
+  /*align-items: center;
+    justify-content: center;*/
+  justify-content: flex-start; /* по вертикали — к верху */
+  align-items: flex-start; /* по горизонтали — к левому краю */
+  flex: 1 1 auto;
+  min-height: 0; /* критично в flex-контейнерах */
+  overflow: auto; /* скролл только здесь */
+  padding-top: 8px; /* мягкий отступ сверху */
+}
+
+/* Враппер под картинку: размер = размеру картинки */
+.preview-media {
+  position: relative;
+  display: inline-block;
+  /*width: 100%;
+    height: 100%;*/
+  max-width: 100%;
+  max-height: 90vh; /* должно совпадать с ограничением для img */
+}
+
+/* Крестик — тонкий и большой, как раньше */
+.close-btn,
+#previewCloseBtn {
+  all: unset;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  z-index: 60;
+}
+
+.close-btn::before,
+.close-btn::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 1.5px;
+  background: var(--close-btn-1);
+  transform-origin: center;
+  transition: background-color 0.2s, transform 0.2s;
+}
+.close-btn::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.close-btn::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.close-btn:hover::before,
+.close-btn:hover::after {
+  background: var(--close-btn-2);
+  transform: translate(-50%, -50%) scale(1.1) rotate(45deg);
+}
+.close-btn:hover::after {
+  transform: translate(-50%, -50%) scale(1.1) rotate(-45deg);
+}
+
+/* --- Картинка в предпросмотре --- */
+#previewImage {
+  display: block;
+  max-width: 100%;
+  max-height: 90vh; /* ключ: ограничение по высоте окна */
+  object-fit: contain;
+  border-radius: 6px;
+  margin: 0;
+}
+
+/* Контент в предпросмотре: картинка или видео */
+/*#previewPane img,
+  #previewPane video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+  }*/
+
+/* Картинка вписывается в доступный размер, не тянется,
+     сохраняет пропорции и НЕ растягивает wrapper */
+#previewPane img,
+#previewPane video {
+  display: block;
+  width: auto; /* не тянуть */
+  height: auto; /* не тянуть */
+  max-width: 100%; /* не выходить за границы по ширине */
+  max-height: 100%; /* и по высоте */
+  object-fit: contain; /* безопасно, даже если когда-то задашь width/height */
+}
+
+/* Lightbox для мобильных экранов (по умолчанию скрыт) */
+.mlb[hidden] {
+  display: none;
+}
+
+.mlb {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: var(--mlb-background);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.mlb-stage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.mlb-stage img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Навигация */
+
+/* Устанавливаем базовые стили для всех кнопок */
+.mlb-btn {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 60px;
+  height: 120px;
+  cursor: pointer;
+  color: var(--color-text-icon);
+}
+
+.mlb-prev {
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mlb-next {
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mlb-btn svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Двигаем стрелки внутри зоны */
+.mlb-prev svg {
+  transform: translateX(-20%);
+}
+
+.mlb-next svg {
+  transform: translateX(20%);
+}
+.mlb-btn:hover path {
+  stroke: var(--color-primary);
+}
+
+/* Крестик закрытия */
+
+.mlb-close {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  font: inherit;
+  color: inherit;
+  line-height: 1;
+
+  outline: none;
+  box-shadow: none;
+
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+}
+
+.mlb-close::before,
+.mlb-close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 1.5px;
+  background-color: var(--color-text-icon);
+  transform-origin: center;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.mlb-close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.mlb-close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.mlb-close:hover::before,
+.mlb-close:hover::after {
+  background-color: var(--close-btn-1);
+  transform: translate(-50%, -50%) scale(1.1) rotate(45deg);
+}
+.mlb-close:hover::after {
+  transform: translate(-50%, -50%) scale(1.1) rotate(-45deg);
+}
+
+/* Подпись и счётчик */
+.mlb-bottom {
+  color: var(--color-text-icon);
+  padding: 10px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  body.hero-page {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
+
+/* ── Admin layout invariants (desktop) ────────────────────── */
+@media (min-width: 1024px) {
+  body.admin-body {
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  main.admin-body {
+    display: flex;
+    gap: var(--space-4);
+    height: calc(100vh - var(--admin-header-h));
+    overflow: hidden;
+  }
+
+  main.admin-body > aside.admin-explorer {
+    position: relative;
+    transform: none !important;
+    box-shadow: none;
+    border-right: none;
+    width: var(--admin-drawer-w);
+    flex: 0 0 var(--admin-drawer-w);
+  }
+
+  main.admin-body > section.admin-preview {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+/* Мобилка: off-canvas как раньше */
+@media (max-width: 900px) {
+  body.admin-body {
+    overflow: auto;
+    height: auto;
+  }
+  main.admin-body {
+    display: block;
+    height: auto;
+    overflow: visible;
+  }
+  .admin-explorer {
+    position: fixed;
+  }
+}
+/* i18n-wrapper neutral on admin */
+.admin-body [data-i18n] {
+  display: contents !important;
+}
+
+/* Подсветка папки при dragover */
+.category-card.drop-target {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* перетаскиваемые элементы */
+.js-file.dragging {
+  opacity: 0.65;
+  outline: 2px dashed var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ты уже добавила подсветку цели дропа: */
+.category-card.drop-target {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+/* DnD fix (Chrome/Safari): разрешаем перетаскивание превью */
+#content .js-file {
+  -webkit-user-drag: element;
+  user-drag: element; /* на всякий случай */
+  pointer-events: auto; /* страховка */
+}
+/* вырезанные элементы пока не вставлены */
+#content .cutting {
+  opacity: 0.6;
+  filter: saturate(0.7);
+}
+
+/* ============================================================================ */
+
+/*  MOBILE-FIRST.css  */
+
+/* =========================
+   БАЗОВАЯ РАЗМЕТКА
+   ========================= */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+main.admin-body {
+  display: block;
+  height: auto;
+  overflow: visible;
+}
+
+/* Toast notifications */
+.toast {
+  position: fixed;
+  bottom: var(--space-6); /* 20px -> var(--space-6) */
+  right: var(--space-6); /* 20px -> var(--space-6) */
+  background: var(--color-text-strong); /* #333 -> var(--color-text-strong) */
+  color: var(--color-text-on-accent);
+  padding: var(--space-3) var(--space-4); /* 12px 18px -> var(--space-3) var(--space-4) */
+  border-radius: var(--radius-md); /* 8px -> var(--radius-md) */
+  opacity: 0;
+  transform: translateY(var(--space-5)); /* 20px -> var(--space-5) */
+  transition: opacity var(--dur-quick), transform var(--dur-quick);
+  font-size: 14px; /* Оставил, так как нет переменной */
+  z-index: 9999;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-success {
+  background: var(--toast-success-bg);
+}
+.toast-error {
+  background: var(--toast-error-bg);
+}
+.toast-info {
+  background: var(--toast-info-bg);
+}
+.toast-warning {
+  background: var(--toast-warning-bg);
+}
+
+/* =========================
+        КНОПКА (три точки / гамбургер)
+        ========================= */
+.admin-drawer-btn {
+  flex: 0 0 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--surface-primary-light);
+  border: none;
+  height: auto;
+  align-self: stretch;
+  cursor: pointer;
+  padding: 0;
+}
+
+.admin-drawer-btn:focus {
+  outline: none;
+}
+
+/* Кнопка-крестик (закрытие панели) */
+.admin-drawer-close {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  background: none;
+  border: none;
+  font-size: var(--fs-h3);
+  line-height: 1;
+  color: var(--color-secondary);
+  cursor: pointer;
+  z-index: 1100;
+  display: none;
+}
+
+.admin-explorer.is-open .admin-drawer-close {
+  display: block;
+}
+.admin-explorer.is-open .admin-drawer-close:focus {
+  outline: none;
+}
+
+/* =========================
+        ПАНЕЛЬ (off-canvas на мобилке)
+        ========================= */
+.admin-explorer {
+  position: fixed;
+  left: 0;
+  top: var(--admin-header-h);
+  height: calc(100vh - var(--admin-header-h));
+  width: min(var(--admin-drawer-w), 86vw);
+  max-width: 92vw;
+  transform: translateX(-100%);
+  transition: transform var(--dur-quick) var(--easing);
+  z-index: 1001;
+  box-shadow: var(--shadow-md);
+  border-right: 1px solid var(--color-primary-600);
+  background-color: var(--surface-primary-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.admin-explorer.is-open {
+  transform: translateX(0);
+}
+
+.admin-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#adminBackdrop[hidden] {
+  display: none;
+}
+
+.admin-explorer.is-open ~ .admin-preview .admin-drawer-btn {
+  visibility: hidden;
+  pointer-events: none;
+}
+/* =========================
+        ПАНЕЛЬ: элементы
+        ========================= */
+.admin-explorer > h2 {
+  margin: 0 0 var(--space-3);
+  font-size: 1.1rem; /* Оставил, так как нет переменной */
+  font-weight: 600; /* Оставил, так как нет переменной */
+  text-align: center;
+  background-color: var(--color-secondary);
+  color: var(--color-text-on-accent);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+}
+
+.admin-hint {
+  font-size: 13px;
+  color: #a33;
+  margin: var(--space-2) 0 var(--space-3);
+  padding: var(--space-2);
+  border-left: 3px solid #e71010;
+  background: #fff5f5;
+  border-radius: var(--radius-sm);
+}
+
+fieldset.op-block {
+  color: var(--color-text-muted); /* #8d8b8b -> var(--color-text-muted) */
+}
+
+.op-block legend {
+  font-size: var(--fs-h5); /* 0.8rem -> var(--fs-h5) (или другая переменная) */
+  font-weight: 600;
+  color: var(--color-text-muted); /* #8d8b8b -> var(--color-text-muted) */
+  background-color: var(
+    --surface-primary-light
+  ); /* #f0e6d8 -> var(--surface-primary-light) */
+  padding: 0 var(--space-2); /* 0 8px -> 0 var(--space-2) */
+}
+
+.admin-ops {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4); /* 14px -> var(--space-4) */
+}
+
+.admin-ops .row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3); /* 10px -> var(--space-3) */
+  margin-bottom: var(--space-3); /* 10px -> var(--space-3) */
+}
+
+.row input {
+  flex-grow: 1;
+  padding: var(--space-2); /* 6px -> var(--space-2) */
+  border: 1px solid #ccc; /* Оставил, нет переменной */
+  border-radius: var(--radius-sm); /* 4px -> var(--radius-sm) */
+  margin: 0 var(--space-2); /* 0 8px -> 0 var(--space-2) */
+  box-sizing: border-box;
+}
+
+.admin-input {
+  width: 260px;
+  box-sizing: border-box;
+}
+
+.row button {
+  background-color: var(--color-secondary);
+  color: var(--color-text-on-accent);
+  padding: 5px var(--space-3); /* 5px 10px -> 5px var(--space-3) */
+  border: none;
+  border-radius: var(--radius-sm); /* 4px -> var(--radius-sm) */
+  cursor: pointer;
+  white-space: nowrap;
+  margin-left: var(--space-3); /* 10px -> var(--space-3) */
+}
+
+.row button:hover {
+  background-color: var(--color-primary);
+}
+
+/* =========================
+        ПРАВАЯ ПАНЕЛЬ (портфолио)
+        ========================= */
+
+/* На всех админских страницах */
+body.hero-page {
+  overflow: hidden;
+  height: 100vh;
+}
+
+.portfolio-main {
+  background-color: var(--surface-1);
+  color: var(--color-black); /* #000 */
+  padding-top: var(--space-3); /* 10px -> var(--space-3) */
+}
+
+.admin-preview {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+/* =========================
+        Заголовок и хлебные крошки
+        ========================= */
+.header-top {
+  display: flex;
+  align-items: stretch;
+}
+
+.header-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* ← было center */
+  justify-content: center;
+  text-align: left; /* ← было center */
+  padding: var(--space-1) var(--space-2);
+}
+
+.header-center h2 {
+  margin: 0;
+  text-align: left;
+}
+
+.breadcrumbs {
+  font-size: 0.9rem; /* Оставил, нет переменной */
+  margin-top: var(--space-2); /* 6px -> var(--space-2) */
+  color: var(--color-primary); /* #a67e5a -> var(--color-primary) */
+  text-align: left;
+}
+
+.breadcrumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.breadcrumbs a:hover,
+.breadcrumbs a.active {
+  text-decoration: underline;
+}
+
+.breadcrumbs span {
+  margin: 0 var(--space-2); /* 0 6px -> 0 var(--space-2) */
+  color: var(--color-text-muted);
+}
+
+/* =========================
+        DESKTOP (панель статична сбоку)
+        ========================= */
+
+@media (min-width: 762px) {
+  .nav-toggle {
+    display: hidden;
+  }
+}
+
+@media (min-width: 1024px) {
+  main.admin-body {
+    display: flex;
+    gap: var(--space-4); /* 16px -> var(--space-4) */
+    height: calc(100vh - var(--admin-header-h));
+    overflow: hidden;
+  }
+
+  main.admin-body > section.admin-preview {
+    flex: 1;
+    min-width: 0;
+  }
+
+  main.admin-body > aside.admin-explorer {
+    position: relative;
+    transform: none !important;
+    height: auto;
+    top: 0;
+    width: var(--admin-drawer-w);
+    flex: 0 0 var(--admin-drawer-w);
+    box-shadow: none;
+    border-right: none;
+  }
+
+  .admin-drawer-btn {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .admin-backdrop {
+    display: none !important;
+  }
+
+  .header-center {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .header-center h2 {
+    margin-left: 0;
+  }
+
+  .breadcrumbs {
+    text-align: left;
+    margin-left: 0;
+  }
+}
+/* i18n wrappers should be layout-neutral */
+[data-i18n] {
+  display: contents; /* “растворяет” обёртку, оставляя только текст */
+}
+
+/* Мобильный режим админки: вместо правой панели — лайтбокс */
+@media (max-width: 900px) {
+  #previewPane {
+    display: none !important;
+  }
+}
+
+/* Лайтбокс всегда поверх всего */
+.mlb {
+  z-index: 5000 !important;
+}
+
+/* Когда открыт лайтбокс — прячем кнопку «три точки» */
+body.mlb-open .admin-drawer-btn {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* context menu */
+.admin-ctx {
+  position: fixed;
+  min-width: 180px;
+  max-width: min(260px, 90vw);
+  /* чтобы не выезжало за нижний край и появлялся скролл внутри */
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
+  background: var(--surface-1, #fff);
+  color: var(--color-text, #222);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 6px;
+  z-index: 3001;
+  display: none;
+}
+.admin-ctx.open {
+  display: block;
+}
+
+.admin-ctx button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+}
+.admin-ctx button:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* ==================================================================== */

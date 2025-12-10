@@ -121,10 +121,3 @@
   background-color: var(--color-text-on-accent);
   color: var(--color-primary);
 }
-
-/* десктоп */
-@media (min-width: 1200px) {
-  .carousel-text {
-    font-size: 1.2rem;
-  }
-}

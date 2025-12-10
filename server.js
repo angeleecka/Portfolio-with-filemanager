@@ -2,6 +2,7 @@
 import express from "express";
 import multer from "multer";
 import fs from "fs";
+import fsp from "fs/promises";
 import path from "path";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
@@ -9,6 +10,8 @@ import chokidar from "chokidar";
 import { fileURLToPath } from "url";
 
 import { generatePortfolioJson } from "./scripts/generatePortfolioJson.js";
+
+export const JSON_PATH = path.join(process.cwd(), "data", "portfolio.json");
 
 // ─────────────────────────────────────────────────────────────
 // Корректный __dirname для ESM
@@ -199,10 +202,24 @@ function ensureDir(dirPath) {
   if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
 }
 
-// === multer storage & API (safe, совместимо) ===
-const fsp = fs.promises;
+async function waitJsonStable(filePath, attempts = 6, delayMs = 150) {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const txt = await fsp.readFile(filePath, "utf8");
+      JSON.parse(txt);
+      return true; // ок
+    } catch (e) {
+      await new Promise((r) => setTimeout(r, delayMs));
+      delayMs = Math.min(Math.round(delayMs * 1.6), 1500);
+    }
+  }
+  return false; // не дождались — не критично, просто вернёмся
+}
 
-const ALLOWED_MIME = /^(image\/(jpeg|png|webp|gif)|video\/(mp4|webm))$/;
+// === multer storage & API (safe, совместимо) ===
+
+const ALLOWED_MIME =
+  /^(image\/(jpeg|png|webp|gif)|video\/(mp4|webm|quicktime|x-msvideo|x-matroska))$/;
 
 function sanitize(name) {
   // нормализуем unicode, удаляем опасные символы, ограничиваем длину
@@ -255,6 +272,9 @@ app.post("/create-folder", async (req, res) => {
     ensureDir(full);
 
     await generatePortfolioJson();
+
+    // дождаться, что data/portfolio.json уже полностью записан и парсится
+    await waitJsonStable(JSON_PATH); // ← используем константу
     return res.json({ success: true });
   } catch (e) {
     console.error(e);
@@ -331,10 +351,21 @@ app.post(["/api/rename", "/rename"], async (req, res) => {
 app.post(["/api/delete", "/delete"], async (req, res) => {
   try {
     const { targetPath } = req.body || {};
-    if (!targetPath) return res.status(400).send("targetPath is required");
+
+    console.log("[/delete] incoming targetPath:", targetPath);
+
+    if (!targetPath) {
+      console.warn("[/delete] targetPath is missing in body");
+      return res.status(400).send("targetPath is required");
+    }
 
     const full = safeJoin(UPLOADS_DIR, targetPath);
-    if (!fs.existsSync(full)) return res.status(404).send("Not found");
+    console.log("[/delete] resolved full path:", full);
+
+    if (!fs.existsSync(full)) {
+      console.warn("[/delete] path not found on disk:", full);
+      return res.status(404).send("Not found");
+    }
 
     const baseName = path.basename(full);
     ensureDir(TRASH_DIR);
@@ -348,9 +379,11 @@ app.post(["/api/delete", "/delete"], async (req, res) => {
     await fsp.writeFile(trashFilePath + ".json", JSON.stringify(meta));
 
     await generatePortfolioJson();
+    console.log("[/delete] OK, moved to trash:", trashFilePath);
+
     return res.json({ success: true, targetPath });
   } catch (e) {
-    console.error(e);
+    console.error("[/delete] exception:", e);
     return res.status(500).send("Failed to delete");
   }
 });
@@ -367,7 +400,8 @@ app.post("/restore", async (req, res) => {
     if (!fs.existsSync(trashFilePath)) {
       const files = await fsp.readdir(TRASH_DIR);
       const cand = files.find((f) => f === base || f.startsWith(base + "__"));
-      if (!cand) return res.status(404).send("File not found in trash/recycle bin");
+      if (!cand)
+        return res.status(404).send("File not found in trash/recycle bin");
       trashFilePath = path.join(TRASH_DIR, cand);
     }
 

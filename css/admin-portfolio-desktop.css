@@ -48,6 +48,7 @@
   position: relative;
   aspect-ratio: 3 / 2;
   border-radius: 12px;
+  cursor: pointer;
   overflow: hidden;
   text-decoration: none;
   background: var(--card-bg);
@@ -88,6 +89,12 @@
 .category-card:hover .card-image {
   transform: scale(1.05);
   filter: brightness(0.98);
+}
+
+/* подсветка папки во время DnD */
+.category-card.drop-hover {
+  outline: 2px dashed var(--color-primary);
+  outline-offset: 4px;
 }
 
 /* =========================
@@ -546,4 +553,82 @@
 /* i18n-wrapper neutral on admin */
 .admin-body [data-i18n] {
   display: contents !important;
+}
+
+/* Подсветка папки при dragover */
+.category-card.drop-target {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* перетаскиваемые элементы */
+.js-file.dragging {
+  opacity: 0.65;
+  outline: 2px dashed var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ты уже добавила подсветку цели дропа: */
+.category-card.drop-target {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+/* DnD fix (Chrome/Safari): разрешаем перетаскивание превью */
+#content .js-file {
+  -webkit-user-drag: element;
+  user-drag: element; /* на всякий случай */
+  pointer-events: auto; /* страховка */
+}
+/* вырезанные элементы пока не вставлены */
+#content .cutting {
+  opacity: 0.6;
+  filter: saturate(0.7);
+}
+
+/* --- Плитки папок в админке --- */
+
+.admin-preview .portfolio-grid {
+  /* на всякий случай: стандартная сетка */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.5rem;
+}
+
+/* сама карточка — фиксированное соотношение сторон */
+.admin-preview .category-card {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 2; /* шире — ниже, но пропорции держим */
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+/* фон-картинка занимает всю карточку */
+.admin-preview .category-card .card-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+/* заголовок всегда *у нижнего края* */
+.admin-preview .category-card .card-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0; /* главное — прижать к низу */
+  padding: 0.4rem 0.6rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+/* можно чуть уменьшать шрифт на очень широких экранах,
+   чтобы текст не выглядел гигантом на маленьких плитках */
+@media (min-width: 1200px) {
+  .admin-preview .category-card .card-title {
+    font-size: 0.9rem;
+  }
 }

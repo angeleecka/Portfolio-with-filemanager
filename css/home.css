@@ -19,7 +19,7 @@
   flex: 0 0 var(--intro-avatar-size); /* <— запретить сжатие! */
 }
 .intro-text-wrapper {
-  font-size: var(--fs-base);
+  font-size: 1.5rem;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -95,7 +95,7 @@
 }
 
 .service-card p {
-  font-size: 0.95rem;
+  font-size: 1.3rem;
   color: var(--color-text-muted);
 }
 
@@ -140,14 +140,14 @@
 
 /* Имя */
 .team-member h3 {
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   margin-bottom: 10px;
   color: var(--color-text-strong);
 }
 
 /* Описание */
 .team-member p {
-  font-size: 0.95rem;
+  font-size: 1.3rem;
   line-height: 1.4;
   color: var(--color-text-muted);
 }

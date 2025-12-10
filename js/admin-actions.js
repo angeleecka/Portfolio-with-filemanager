@@ -11,6 +11,7 @@ function getCurrentPath() {
   }
   return path.join("/");
 }
+window.getCurrentPath = getCurrentPath;
 
 async function handleResponse(res) {
   if (!res.ok) {
@@ -82,6 +83,20 @@ async function uploadFile(file) {
   }
 }
 
+async function uploadFileTo(file, folderRelPath) {
+  const formData = new FormData();
+  formData.append("folderPath", folderRelPath || "");
+  formData.append("file", file);
+
+  const res = await fetch("/upload-file", { method: "POST", body: formData });
+  await handleResponse(res);
+  if (typeof window.renderPortfolio === "function") {
+    await window.renderPortfolio();
+  }
+  showToast(`Файл "${file.name}" загружен`, "success");
+  return true;
+}
+
 // === ПЕРЕИМЕНОВАТЬ ===
 async function renameItem(oldName, newName) {
   if (!oldName || !newName) {
@@ -151,21 +166,45 @@ async function deleteItem(name) {
   const basePath = getCurrentPath();
   const targetPath = basePath ? `${basePath}/${name}` : name;
 
+  // 🔐 Подтверждение перед удалением
+  const ok = window.confirm(`Delete "${name}"?\nThis action cannot be undone.`);
+  if (!ok) {
+    showToast?.("Deletion cancelled", "info");
+    return false;
+  }
+
+  console.log("[deleteItem] name:", name);
+  console.log("[deleteItem] basePath:", basePath);
+  console.log("[deleteItem] targetPath:", targetPath);
+
   try {
     const res = await fetch("/delete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ targetPath }),
     });
-    await handleResponse(res);
+
+    // чуть более подробная обработка, чем просто handleResponse
+    if (!res.ok) {
+      let text = "";
+      try {
+        text = await res.text();
+      } catch (_) {}
+      console.error("[deleteItem] server error:", res.status, text);
+      throw new Error(`HTTP ${res.status}${text ? ": " + text : ""}`);
+    } else {
+      try {
+        await res.json().catch(() => ({}));
+      } catch (_) {}
+    }
+
     if (typeof window.renderPortfolio === "function") {
       await window.renderPortfolio();
-      if (typeof window.hidePreview === "function") window.hidePreview(); // Скрываем превью после удаления
+      if (typeof window.hidePreview === "function") window.hidePreview();
     }
 
     lastDeletedItem = { name, path: targetPath, basePath };
 
-    // ✅ ИЗМЕНЕНИЕ: очищаем инпут и selectedFileName после удаления
     const inputDeleteName = document.getElementById("deleteName");
     if (inputDeleteName) {
       inputDeleteName.value = "";
@@ -174,7 +213,6 @@ async function deleteItem(name) {
       window.selectedFileName = null;
     }
 
-    // показываем тост без автоисчезновения, с кнопкой "Отменить"
     showToast(
       `Element "${name}" has been removed`,
       "warning",
@@ -184,7 +222,7 @@ async function deleteItem(name) {
     );
     return true;
   } catch (e) {
-    console.error(e);
+    console.error("[deleteItem] failed:", e);
     showToast("Failed to delete item: " + e.message, "error");
     return false;
   }

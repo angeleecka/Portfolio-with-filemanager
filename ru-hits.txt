@@ -570,3 +570,6 @@ E:\1_SANDBOX\portfolio_framework\portfolio-demo\services.html:79: <img src="./im
 }
 *** End Patch
 */
+
+💡 Рекомендую порядок загрузки:
+
