@@ -6,9 +6,13 @@
 
   /* Цвета */
   --color-primary: #c7956a;
+  --color-primary-trans: #c7956a65;
   --color-primary-600: #a67e5a;
   --color-secondary: #4d3323;
   --color-accent-brown: #a67c52;
+
+  --color-panel-bg: #ccb097;
+
   --color-black: #000;
 
   /* Тексты */

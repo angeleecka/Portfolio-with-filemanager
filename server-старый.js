@@ -10,6 +10,7 @@ import chokidar from "chokidar";
 import { fileURLToPath } from "url";
 
 import { generatePortfolioJson } from "./scripts/generatePortfolioJson.js";
+console.log("[server] loaded from:", import.meta.url);
 
 export const JSON_PATH = path.join(process.cwd(), "data", "portfolio.json");
 
@@ -67,7 +68,6 @@ const deny = [
   /^\/package(-lock)?\.json$/i,
   /^\/(check-filenames|clean-portfolio|regen|generatePortfolioJson)\.js$/i,
   /^\/(trash|versions|scripts|node_modules)\//i,
-  /^\/(trash|versions|scripts|node_modules|logs)\//i,
 ];
 
 app.use((req, res, next) => {
@@ -184,43 +184,6 @@ function ensureDir(dirPath) {
   if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
 }
 
-// === Windows-like name guard (for demo parity with Explorer) ===
-// Forbidden characters: \ / : * ? " < > |
-const WIN_FORBIDDEN_NAME_RE = /[\\\/\:\*\?"\<\>\|]/;
-
-function getPathSegments(rel) {
-  return (rel || "").toString().replace(/^\/+/, "").split("/").filter(Boolean);
-}
-
-function validateWinNameSegment(seg, { kind } = {}) {
-  const s = (seg || "").toString().trim();
-  if (!s) return { ok: false, error: "Empty name" };
-  if (s === "." || s === "..") return { ok: false, error: "Invalid name" };
-  if (WIN_FORBIDDEN_NAME_RE.test(s)) {
-    return { ok: false, error: 'Forbidden characters: \\ / : * ? " < > |' };
-  }
-  if (kind === "folder" && s.includes(".")) {
-    return { ok: false, error: "Folder name cannot contain dot (.)" };
-  }
-  if (kind === "file" && s.startsWith(".")) {
-    return { ok: false, error: "File name cannot start with dot (.)" };
-  }
-  return { ok: true, value: s };
-}
-
-function validateRelPathSegments(rel) {
-  const segs = getPathSegments(rel);
-  if (!segs.length) return { ok: false, error: "Path is empty" };
-  for (const s of segs) {
-    if (s === "." || s === "..")
-      return { ok: false, error: "Invalid path segment" };
-    if (WIN_FORBIDDEN_NAME_RE.test(s)) {
-      return { ok: false, error: 'Forbidden characters: \\ / : * ? " < > |' };
-    }
-  }
-  return { ok: true, segments: segs };
-}
-
 async function waitJsonStable(filePath, attempts = 6, delayMs = 150) {
   for (let i = 0; i < attempts; i++) {
     try {
@@ -286,36 +249,18 @@ app.post("/create-folder", async (req, res) => {
     if (!folderPath || typeof folderPath !== "string") {
       return res.status(400).send("folderPath is mandatory/required");
     }
-
-    // Windows-like name restrictions (demo parity)
-    const folderRel = folderPath.toString().replace(/^\/+/, "");
-    const segCheck = validateRelPathSegments(folderRel);
-    if (!segCheck.ok) {
-      return res.status(400).json({ success: false, error: segCheck.error });
-    }
-    const folderName = segCheck.segments[segCheck.segments.length - 1];
-    const nameCheck = validateWinNameSegment(folderName, { kind: "folder" });
-    if (!nameCheck.ok) {
-      return res.status(400).json({ success: false, error: nameCheck.error });
-    }
-    const full = safeJoin(UPLOADS_DIR, folderRel);
+    const full = safeJoin(UPLOADS_DIR, folderPath.replace(/^\/+/, ""));
 
     ensureDir(full);
 
     await generatePortfolioJson();
-    await waitJsonStable(JSON_PATH);
 
     // дождаться, что data/portfolio.json уже полностью записан и парсится
     await waitJsonStable(JSON_PATH); // ← используем константу
     return res.json({ success: true });
   } catch (e) {
     console.error(e);
-    return res.status(500).json({
-      success: false,
-      error: "Failed to create folder",
-      code: e?.code || null,
-      message: e?.message || String(e),
-    });
+    return res.status(500).send("Failed to create folder");
   }
 });
 
@@ -344,7 +289,6 @@ app.post("/upload-file", (req, res) => {
       console.log(`📂 Папка назначения: ${folderPath || "(root)"}`);
 
       await generatePortfolioJson();
-      await waitJsonStable(JSON_PATH);
 
       return res.json({
         success: true,
@@ -362,91 +306,26 @@ app.post("/upload-file", (req, res) => {
 app.post(["/api/rename", "/rename"], async (req, res) => {
   try {
     const { oldPath, newPath } = req.body || {};
-    if (!oldPath || !newPath) {
-      return res
-        .status(400)
-        .json({ success: false, error: "oldPath and newPath are required" });
-    }
+    if (!oldPath || !newPath)
+      return res.status(400).send("oldPath and newPath are required");
 
-    // Windows-like name restrictions (demo parity)
-    const oldRel = oldPath.toString().replace(/^\/+/, "");
-    const newRel = newPath.toString().replace(/^\/+/, "");
-
-    const oldCheck = validateRelPathSegments(oldRel);
-    if (!oldCheck.ok) {
-      return res.status(400).json({ success: false, error: oldCheck.error });
-    }
-
-    const newCheck = validateRelPathSegments(newRel);
-    if (!newCheck.ok) {
-      return res.status(400).json({ success: false, error: newCheck.error });
-    }
-
-    const from = safeJoin(UPLOADS_DIR, oldRel);
-    const to = safeJoin(UPLOADS_DIR, newRel);
-
-    // Determine source type to apply dot-rule (folder vs file)
-    const isDir = fs.existsSync(from) && fs.statSync(from).isDirectory();
-    const newLast = newCheck.segments[newCheck.segments.length - 1];
-    const nameCheck = validateWinNameSegment(newLast, {
-      kind: isDir ? "folder" : "file",
-    });
-    if (!nameCheck.ok) {
-      return res.status(400).json({ success: false, error: nameCheck.error });
-    }
-
-    if (!fs.existsSync(from)) {
-      return res
-        .status(404)
-        .json({ success: false, error: "Source not found", oldPath, newPath });
-    }
+    const from = safeJoin(UPLOADS_DIR, oldPath);
+    const to = safeJoin(UPLOADS_DIR, newPath);
+    if (!fs.existsSync(from)) return res.status(404).send("Source not found");
 
     ensureDir(path.dirname(to));
     const finalDest = await uniquePath(to);
 
-    try {
-      await fsp.rename(from, finalDest);
-    } catch (e) {
-      // ⚠️ Windows/locks/watcher: иногда папку нельзя "rename", но можно copy+remove
-      const isDir = fs.existsSync(from) && fs.statSync(from).isDirectory();
-      const code = e?.code;
-
-      console.error("[/rename] rename failed:", {
-        oldPath,
-        newPath,
-        from,
-        finalDest,
-        code,
-        message: e?.message,
-      });
-
-      if (isDir && (code === "EPERM" || code === "EACCES")) {
-        // fallback: копируем директорию и удаляем исходник
-        await fsp.cp(from, finalDest, { recursive: true });
-        await fsp.rm(from, { recursive: true, force: true });
-      } else {
-        throw e;
-      }
-    }
-
+    await fsp.rename(from, finalDest);
     await generatePortfolioJson();
-    await waitJsonStable(JSON_PATH);
 
     return res.json({
       success: true,
       newPath: path.relative(UPLOADS_DIR, finalDest),
     });
   } catch (e) {
-    console.error("[/rename] exception:", {
-      code: e?.code,
-      message: e?.message,
-      stack: e?.stack,
-    });
-    return res.status(500).json({
-      success: false,
-      error: e?.message || "Failed to rename",
-      code: e?.code || null,
-    });
+    console.error(e);
+    return res.status(500).send("Failed to rename");
   }
 });
 
@@ -476,50 +355,18 @@ app.post(["/api/delete", "/delete"], async (req, res) => {
     let trashFilePath = path.join(TRASH_DIR, baseName);
     trashFilePath = await uniquePath(trashFilePath);
 
-    try {
-      await fsp.rename(full, trashFilePath);
-    } catch (e) {
-      const code = e?.code;
-      const isDir = fs.existsSync(full) && fs.statSync(full).isDirectory();
-
-      console.error("[/delete] rename failed:", {
-        targetPath,
-        full,
-        trashFilePath,
-        code,
-        message: e?.message,
-      });
-
-      // Windows иногда не дает rename папок/файлов (EPERM/EACCES) — делаем fallback
-      if (code === "EPERM" || code === "EACCES") {
-        if (isDir) {
-          await fsp.cp(full, trashFilePath, { recursive: true });
-          await fsp.rm(full, { recursive: true, force: true });
-        } else {
-          await fsp.copyFile(full, trashFilePath);
-          await fsp.unlink(full);
-        }
-      } else {
-        throw e;
-      }
-    }
+    await fsp.rename(full, trashFilePath);
 
     const meta = { oldDir: path.dirname(full), originalName: baseName };
     await fsp.writeFile(trashFilePath + ".json", JSON.stringify(meta));
 
     await generatePortfolioJson();
     console.log("[/delete] OK, moved to trash:", trashFilePath);
-    await waitJsonStable(JSON_PATH);
 
     return res.json({ success: true, targetPath });
   } catch (e) {
     console.error("[/delete] exception:", e);
-    return res.status(500).json({
-      success: false,
-      error: "Failed to delete",
-      code: e?.code || null,
-      message: e?.message || String(e),
-    });
+    return res.status(500).send("Failed to delete");
   }
 });
 
@@ -554,20 +401,13 @@ app.post("/restore", async (req, res) => {
     await fsp.unlink(metadataPath);
 
     await generatePortfolioJson();
-    await waitJsonStable(JSON_PATH);
-
     return res.json({
       success: true,
       restoredPath: path.relative(UPLOADS_DIR, dest),
     });
   } catch (e) {
     console.error(e);
-    return res.status(500).json({
-      success: false,
-      error: "Failed to restore",
-      code: e?.code || null,
-      message: e?.message || String(e),
-    });
+    return res.status(500).send("Failed to restore");
   }
 });
 
@@ -586,12 +426,7 @@ app.post("/clear-trash", async (req, res) => {
     return res.json({ success: true, message: "Trash/Recycle Bin cleared" });
   } catch (e) {
     console.error(e);
-    return res.status(500).json({
-      success: false,
-      error: "Failed to clear trash/recycle bin",
-      code: e?.code || null,
-      message: e?.message || String(e),
-    });
+    return res.status(500).send("Failed to clear trash/recycle bin");
   }
 });
 
@@ -599,100 +434,10 @@ app.post("/clear-trash", async (req, res) => {
 app.post("/save", async (req, res) => {
   try {
     await generatePortfolioJson();
-    await waitJsonStable(JSON_PATH);
-
     return res.json({ success: true });
   } catch (e) {
     console.error("generatePortfolioJson failed:", e);
-    return res.status(500).json({
-      success: false,
-      error: "Failed to regenerate JSON",
-      code: e?.code || null,
-      message: e?.message || String(e),
-    });
-  }
-});
-
-const LOGS_DIR = path.join(process.cwd(), "logs");
-const CLIENT_LOG_FILE = path.join(LOGS_DIR, "client-errors.log");
-
-// анти-спам в памяти
-const _errRate = new Map(); // key -> lastTs
-const ERR_COOLDOWN_MS = 5000; // 5 секунд
-const MAX_FIELD_LEN = 10000; // чтобы не улетало мегабайтами
-const ROTATE_BYTES = 5 * 1024 * 1024; // 5 MB
-
-async function ensureLogsDir() {
-  await fsp.mkdir(LOGS_DIR, { recursive: true });
-}
-
-function clip(v, max = MAX_FIELD_LEN) {
-  const s = String(v ?? "");
-  return s.length > max ? s.slice(0, max) + "…(clipped)" : s;
-}
-
-async function rotateIfNeeded() {
-  try {
-    const st = await fsp.stat(CLIENT_LOG_FILE);
-    if (st.size < ROTATE_BYTES) return;
-    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const rotated = path.join(LOGS_DIR, `client-errors.${stamp}.log`);
-    await fsp.rename(CLIENT_LOG_FILE, rotated);
-  } catch {
-    // файла ещё нет — ок
-  }
-}
-
-// сам роут
-app.post("/log-error", express.json({ limit: "1mb" }), async (req, res) => {
-  try {
-    const ip =
-      req.headers["x-forwarded-for"]?.toString().split(",")[0].trim() ||
-      req.socket.remoteAddress ||
-      "unknown";
-    const body = req.body || {};
-
-    // нормализуем + режем слишком большие поля
-    const payload = {
-      type: clip(body.type),
-      message: clip(body.message),
-      stack: clip(body.stack),
-      filename: clip(body.filename),
-      lineno: body.lineno ?? null,
-      colno: body.colno ?? null,
-      href: clip(body.href),
-      ua: clip(body.ua),
-      time: clip(body.time) || new Date().toISOString(),
-      ip,
-    };
-
-    // анти-спам
-    const key = `${ip}|${payload.type}|${payload.message}|${
-      payload.filename || ""
-    }|${payload.lineno || ""}`;
-    const now = Date.now();
-    const last = _errRate.get(key) || 0;
-    if (now - last < ERR_COOLDOWN_MS) {
-      return res.json({ ok: true, skipped: true });
-    }
-    _errRate.set(key, now);
-
-    // запись в файл
-    await ensureLogsDir();
-    await rotateIfNeeded();
-    await fsp.appendFile(
-      CLIENT_LOG_FILE,
-      JSON.stringify(payload) + "\n",
-      "utf8"
-    );
-
-    // можно оставить краткий лог в консоль (не обязателен)
-    console.warn("[client-error]", payload.type, payload.message);
-
-    return res.json({ ok: true });
-  } catch (e) {
-    console.error("[client-error] failed:", e);
-    return res.status(500).json({ ok: false });
+    return res.status(500).send("Failed to regenerate JSON");
   }
 });
 
@@ -715,8 +460,6 @@ app.listen(PORT, async () => {
 
   try {
     await generatePortfolioJson();
-    await waitJsonStable(JSON_PATH);
-
     console.log("📂 portfolio.json synced with 'uploads' folder");
   } catch (err) {
     console.error("Error during primary JSON generation:", err);

@@ -1,5 +1,75 @@
 // js/admin-ui.js
 
+// confirm-modal bridge (для #confirm-modal)
+window.confirmModal =
+  window.confirmModal ||
+  function confirmModal(message, opts = {}) {
+    const modal = document.getElementById("confirm-modal");
+    const titleEl = document.getElementById("confirm-title");
+    const textEl = document.getElementById("confirm-text");
+    const okBtn = document.getElementById("confirm-ok");
+    const cancelBtn = document.getElementById("confirm-cancel");
+
+    // если вдруг модалки нет — fallback на браузерный confirm
+    if (!modal || !okBtn || !cancelBtn || !titleEl || !textEl) {
+      return Promise.resolve(window.confirm(message));
+    }
+
+    titleEl.textContent = opts.title || "Подтверждение";
+    textEl.textContent = message;
+    okBtn.textContent = opts.okText || "Да";
+    cancelBtn.textContent = opts.cancelText || "Отмена";
+
+    modal.classList.remove("hidden");
+
+    return new Promise((resolve) => {
+      const cleanup = () => {
+        modal.classList.add("hidden");
+        okBtn.removeEventListener("click", onOk);
+        cancelBtn.removeEventListener("click", onCancel);
+        modal.removeEventListener("click", onBackdrop);
+        document.removeEventListener("keydown", onKey);
+      };
+
+      const onOk = () => {
+        cleanup();
+        resolve(true);
+      };
+      const onCancel = () => {
+        cleanup();
+        resolve(false);
+      };
+      const onBackdrop = (e) => {
+        if (e.target === modal) onCancel();
+      };
+      const onKey = (e) => {
+        if (e.key === "Escape") onCancel();
+      };
+
+      okBtn.addEventListener("click", onOk);
+      cancelBtn.addEventListener("click", onCancel);
+      modal.addEventListener("click", onBackdrop);
+      document.addEventListener("keydown", onKey);
+    });
+  };
+
+// --- Совместимость со старым кодом (FileOperations.js) ---
+// Раньше это приходило из ModalConfirm.js, но теперь используем confirmModal.
+window.showConfirmModal =
+  window.showConfirmModal ||
+  function (message, onConfirm) {
+    const fn = window.confirmModal;
+    if (typeof fn !== "function") {
+      // Фоллбек на браузерный confirm, если вдруг confirmModal не подключился
+      if (window.confirm(message)) onConfirm?.();
+      return;
+    }
+
+    fn(message).then((ok) => {
+      if (ok) onConfirm?.();
+    });
+  };
+
 // --- allowlist для расширений файлов ---
 const ALLOWED_EXTENSIONS = [
   "jpg",
@@ -632,6 +702,20 @@ function closeDrawer() {
   if (explorer) explorer.classList.remove("is-open");
 }
 
+// --- keep drawer below the real site header (mobile) ---
+function syncAdminHeaderHeight() {
+  const header =
+    document.getElementById("header") ||
+    document.querySelector("header.portfolio-header") ||
+    document.querySelector(".portfolio-header");
+
+  const h = header ? Math.ceil(header.getBoundingClientRect().height) : 0;
+  document.documentElement.style.setProperty("--admin-header-h", `${h}px`);
+}
+
+syncAdminHeaderHeight();
+window.addEventListener("resize", syncAdminHeaderHeight);
+
 // ==== Выбор и перемещение элементов (helpers) =============================
 
 /**
@@ -675,9 +759,6 @@ async function moveItemsToFolder(names, targetFolderPath) {
       }
     }
 
-    if (typeof window.renderPortfolio === "function") {
-      await window.renderPortfolio();
-    }
     if (typeof showToast === "function") {
       showToast(`Moved: ${names.join(", ")}`, "success");
     }
@@ -703,10 +784,6 @@ async function uploadFileTo(file, folderPath) {
     const result = await (typeof handleResponse === "function"
       ? handleResponse(res)
       : res.json?.());
-
-    if (typeof window.renderPortfolio === "function") {
-      await window.renderPortfolio();
-    }
 
     if (typeof showToast === "function") {
       showToast(`File "${file.name}" uploaded`, "success");
@@ -929,6 +1006,54 @@ function initAdminDnD() {
 window.initAdminDnD = initAdminDnD;
 
 document.addEventListener("DOMContentLoaded", () => {
+  const splitFM = document.querySelector(".file-manager-container");
+  const legacyGrid = document.getElementById("content");
+
+  // ===== Off-canvas панель: открыть/закрыть кнопками =====
+  const drawerBtn = document.querySelector(".admin-drawer-btn");
+  const explorer = document.querySelector(".admin-explorer");
+  const drawerClose = document.querySelector(".admin-drawer-close");
+
+  if (drawerBtn && explorer) {
+    drawerBtn.addEventListener("click", () =>
+      explorer.classList.add("is-open")
+    );
+    drawerClose?.addEventListener("click", closeDrawer);
+  }
+
+  // клик вне панели — закрыть (только мобилка)
+  document.addEventListener(
+    "click",
+    (e) => {
+      if (!explorer || !explorer.classList.contains("is-open")) return;
+      if (window.matchMedia("(min-width: 1024px)").matches) return;
+      const inside = explorer.contains(e.target);
+      const onToggle = drawerBtn?.contains(e.target);
+      if (!inside && !onToggle) closeDrawer();
+    },
+    true
+  );
+
+  // Esc — закрыть
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && explorer?.classList.contains("is-open")) {
+      closeDrawer();
+    }
+  });
+
+  // при переходе на десктоп — состояние сбросить
+  window.matchMedia("(min-width: 1024px)").addEventListener("change", (ev) => {
+    if (ev.matches) closeDrawer();
+  });
+
+  // опционально: внешние события могут открыть панель (например, из контекстного меню)
+  document.addEventListener("admin:open-drawer", openDrawer);
+
+  // ✅ если мы в новом сплит-менеджере — НЕ запускаем legacy-инициализацию #content
+  if (splitFM && legacyGrid && legacyGrid.hidden) {
+    return;
+  }
+
   // кнопки в админке — не submit
   document
     .querySelectorAll(".admin-ops button, #adminOps button")
@@ -941,7 +1066,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initAdminLassoSelection();
 
   // ==== Создать папку ====
-  document.getElementById("btnMkdir").addEventListener("click", async (e) => {
+  document.getElementById("btnMkdir")?.addEventListener("click", async (e) => {
     const btn = e.currentTarget;
     if (btn.dataset.busy === "1") return;
     btn.dataset.busy = "1";
@@ -965,7 +1090,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==== Загрузить файл ====
-  document.getElementById("btnUpload").addEventListener("click", async (e) => {
+  document.getElementById("btnUpload")?.addEventListener("click", async (e) => {
     const btn = e.currentTarget;
     if (btn.dataset.busy === "1") return;
     btn.dataset.busy = "1";
@@ -982,7 +1107,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==== Переименовать ====
-  document.getElementById("btnRename").addEventListener("click", async (e) => {
+  document.getElementById("btnRename")?.addEventListener("click", async (e) => {
     const btn = e.currentTarget;
     if (btn.dataset.busy === "1") return;
     btn.dataset.busy = "1";
@@ -1043,7 +1168,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==== Удалить ====
-  document.getElementById("btnDelete").addEventListener("click", async (e) => {
+  document.getElementById("btnDelete")?.addEventListener("click", async (e) => {
     const btn = e.currentTarget;
     if (btn.dataset.busy === "1") return;
     btn.dataset.busy = "1";
@@ -1069,60 +1194,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==== Восстановить ====
-  document.getElementById("btnRestore").addEventListener("click", async (e) => {
-    const btn = e.currentTarget;
-    if (btn.dataset.busy === "1") return;
-    btn.dataset.busy = "1";
-    btn.disabled = true;
+  document
+    .getElementById("btnRestore")
+    ?.addEventListener("click", async (e) => {
+      const btn = e.currentTarget;
+      if (btn.dataset.busy === "1") return;
+      btn.dataset.busy = "1";
+      btn.disabled = true;
 
-    try {
-      await restoreItem();
-      if (isMobile()) closeDrawer();
-    } finally {
-      btn.dataset.busy = "0";
-      btn.disabled = false;
-    }
-  });
-
-  // ===== Off-canvas панель: открыть/закрыть кнопками =====
-  const drawerBtn = document.querySelector(".admin-drawer-btn");
-  const explorer = document.querySelector(".admin-explorer");
-  const drawerClose = document.querySelector(".admin-drawer-close");
-
-  if (drawerBtn && explorer) {
-    drawerBtn.addEventListener("click", () =>
-      explorer.classList.add("is-open")
-    );
-    drawerClose?.addEventListener("click", closeDrawer);
-  }
-
-  // клик вне панели — закрыть (только мобилка)
-  document.addEventListener(
-    "click",
-    (e) => {
-      if (!explorer || !explorer.classList.contains("is-open")) return;
-      if (window.matchMedia("(min-width: 1024px)").matches) return;
-      const inside = explorer.contains(e.target);
-      const onToggle = drawerBtn?.contains(e.target);
-      if (!inside && !onToggle) closeDrawer();
-    },
-    true
-  );
-
-  // Esc — закрыть
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && explorer?.classList.contains("is-open")) {
-      closeDrawer();
-    }
-  });
-
-  // при переходе на десктоп — состояние сбросить
-  window.matchMedia("(min-width: 1024px)").addEventListener("change", (ev) => {
-    if (ev.matches) closeDrawer();
-  });
-
-  // опционально: внешние события могут открыть панель (например, из контекстного меню)
-  document.addEventListener("admin:open-drawer", openDrawer);
+      try {
+        await restoreItem();
+        if (isMobile()) closeDrawer();
+      } finally {
+        btn.dataset.busy = "0";
+        btn.disabled = false;
+      }
+    });
 
   // ==== Контекстное меню: инициализация после загрузки DOM ====
   if (typeof initAdminContextMenu === "function") {
@@ -1155,24 +1242,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ==== Авто-инициализация DnD после каждого рендера галереи ====
-  if (
-    typeof window.renderPortfolio === "function" &&
-    !window.__adminDndPatched
-  ) {
-    window.__adminDndPatched = true;
-
-    const origRender = window.renderPortfolio;
-    window.renderPortfolio = async (...args) => {
-      const res = await origRender(...args);
-      if (typeof initAdminDnD === "function") {
-        initAdminDnD();
-      }
-      return res;
-    };
-
-    // инициализируем DnD для уже отрисованной сетки
+  // Инициализация DnD ОДИН РАЗ при загрузке
+  if (typeof initAdminDnD === "function") {
     initAdminDnD();
+  }
+
+  // Инициализация контекстного меню
+  if (typeof initAdminContextMenu === "function") {
+    initAdminContextMenu();
   }
 
   // 🔹 Очистка выделения по клику на пустом месте сетки

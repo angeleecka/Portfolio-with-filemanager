@@ -67,12 +67,12 @@ main.admin-body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--surface-primary-light);
+  /* background: var(--header-bg);*/
   border: none;
   height: auto;
   align-self: stretch;
   cursor: pointer;
-  padding: 0;
+  padding: 5px;
 }
 
 .admin-drawer-btn:focus {
@@ -116,8 +116,8 @@ main.admin-body {
   z-index: 1001;
   box-shadow: var(--shadow-md);
   border-right: 1px solid var(--color-primary-600);
-  background-color: var(--surface-primary-light);
-  border-radius: var(--radius-md);
+
+  border-radius: 5px;
   padding: var(--space-3);
   box-sizing: border-box;
   display: flex;
@@ -258,15 +258,18 @@ body.hero-page {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* ← было center */
+  align-items: flex-start; /* ← было  center*/
   justify-content: center;
   text-align: left; /* ← было center */
-  padding: var(--space-1) var(--space-2);
+  /*padding: var(--space-1);*/
+  padding-left: 10px;
+  line-height: 0;
 }
 
 .header-center h2 {
   margin: 0;
   text-align: left;
+  font-size: 1.2rem;
 }
 
 .breadcrumbs {

@@ -136,224 +136,6 @@
   cursor: pointer;
 }
 
-/* =========================
-   6. Область предпросмотра справа
-   ========================= */
-/*#workspace {
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-  width: 100%;
-  box-sizing: border-box;
-  height: 100%;
-  flex-direction: row;
-  overflow: hidden;
-}*/
-#workspace {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: stretch;
-  min-height: 0;
-}
-
-/*.portfolio-grid {
-  flex: 1;
-  overflow: auto;
-  width: 100%;
-  margin: 0;
-}*/
-
-/* Левая колонка: даём сжиматься! (ключ к отсутствию горизонтального скролла) */
-.portfolio-grid {
-  flex: 1 1 auto;
-  min-width: 0; /* ← КРИТИЧЕСКИ ВАЖНО */
-  overflow: auto; /* свой скролл только тут */
-}
-/* --- Панель предпросмотра --- */
-/*#previewPane {
-  flex: 0 0 0;
-  width: 0;
-  max-width: 80%;
-  position: relative;
-  border-left: 1px solid var(--color-primary-600);
-  padding: 10px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  background: var(--surface-1);
-  display: none;
-  flex-direction: column;
-  margin-left: 8px;
-  transition: flex-basis 0.25s ease, width 0.25s ease;
-}*/
-
-/* Правая колонка: панель предпросмотра */
-#previewPane,
-.preview-pane {
-  position: relative;
-  display: none; /* по умолчанию скрыта */
-  flex-direction: column; /* вертикальная колонка внутри */
-  overflow: visible; /* чтобы «ручка» не отрезалась */
-  padding-left: 10px; /* ← регулируй зазор здесь (10–14px) */
-  box-sizing: border-box;
-}
-
-/* --- Ручка-резайзер --- */
-#previewResizer {
-  position: absolute;
-  top: 0;
-  left: 0px; /*  наезжаем на область плиток */
-  width: 8px; /* удобная зона захвата */
-  height: 100%;
-  cursor: col-resize; /*ew-resize;*/
-  z-index: 50;
-  /* background: rgba(255,0,0,0.2); /* подсветка для отладки */
-  background: none; /* Убираем отладочный фон */
-}
-#previewResizer::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 3px;
-  width: 2px;
-  background: var(--previewResizer);
-}
-
-#previewPane.active {
-  display: flex;
-  flex: 0 1 400px; /* Позволяет панели сжиматься до 0 и растягиваться до 400px, но не больше */
-  width: auto; /* убираем фиксированную ширину */
-  min-width: 280px; /* совпадает с min в JS-ресайзере */
-}
-/* Активная панель: показываем и задаём базовую ширину */
-/*#previewPane.active,
-.preview-pane.active {
-  display: flex;
-  flex: 0 0 400px;
-  width: auto;
-}*/
-#previewPane[hidden] {
-  display: none !important;
-  flex: 0 0 0 !important;
-  width: 0 !important;
-}
-/* во время перетаскивания */
-#previewPane.resizing {
-  user-select: none;
-  cursor: ew-resize;
-}
-#previewPane.resizing #previewResizer::after {
-  background: var(--previewPane-resizing);
-}
-
-/* --- Тело предпросмотра --- */
-/*.preview-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 100%;
-  max-height: 100%;
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: auto;
-}*/
-
-.preview-body {
-  display: flex;
-  /*align-items: center;
-  justify-content: center;*/
-  justify-content: flex-start; /* по вертикали — к верху */
-  align-items: flex-start; /* по горизонтали — к левому краю */
-  flex: 1 1 auto;
-  min-height: 0; /* критично в flex-контейнерах */
-  overflow: auto; /* скролл только здесь */
-  padding-top: 8px; /* мягкий отступ сверху */
-}
-
-/* Враппер под картинку: размер = размеру картинки */
-.preview-media {
-  position: relative;
-  display: inline-block;
-  /*width: 100%;
-  height: 100%;*/
-  max-width: 100%;
-  max-height: 90vh; /* должно совпадать с ограничением для img */
-}
-
-/* Крестик — тонкий и большой, как раньше */
-.close-btn,
-#previewCloseBtn {
-  all: unset;
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 44px;
-  height: 44px;
-  cursor: pointer;
-  z-index: 60;
-}
-
-.close-btn::before,
-.close-btn::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 44px;
-  height: 1.5px;
-  background: var(--close-btn-1);
-  transform-origin: center;
-  transition: background-color 0.2s, transform 0.2s;
-}
-.close-btn::before {
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-.close-btn::after {
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
-.close-btn:hover::before,
-.close-btn:hover::after {
-  background: var(--close-btn-2);
-  transform: translate(-50%, -50%) scale(1.1) rotate(45deg);
-}
-.close-btn:hover::after {
-  transform: translate(-50%, -50%) scale(1.1) rotate(-45deg);
-}
-
-/* --- Картинка в предпросмотре --- */
-#previewImage {
-  display: block;
-  max-width: 100%;
-  max-height: 90vh; /* ключ: ограничение по высоте окна */
-  object-fit: contain;
-  border-radius: 6px;
-  margin: 0;
-}
-
-/* Контент в предпросмотре: картинка или видео */
-/*#previewPane img,
-#previewPane video {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto;
-}*/
-
-/* Картинка вписывается в доступный размер, не тянется,
-   сохраняет пропорции и НЕ растягивает wrapper */
-#previewPane img,
-#previewPane video {
-  display: block;
-  width: auto; /* не тянуть */
-  height: auto; /* не тянуть */
-  max-width: 100%; /* не выходить за границы по ширине */
-  max-height: 100%; /* и по высоте */
-  object-fit: contain; /* безопасно, даже если когда-то задашь width/height */
-}
-
 /* Lightbox для мобильных экранов (по умолчанию скрыт) */
 .mlb[hidden] {
   display: none;
@@ -515,7 +297,7 @@
 
   main.admin-body {
     display: flex;
-    gap: var(--space-4);
+    gap: 2px;
     height: calc(100vh - var(--admin-header-h));
     overflow: hidden;
   }
@@ -533,23 +315,103 @@
     flex: 1;
     min-width: 0;
   }
+
+  /* === File manager: на всю правую колонку === */
+
+  /* Убираем внутренний большой хедер справа */
+  .admin-preview .sticky-header {
+    display: none;
+  }
+
+  /* Правый скролл-контейнер: чтобы менеджер начинался прямо от верха ячейки */
+  .admin-preview {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .admin-preview .preview-scroll {
+    /* важно: растягиваем файловый менеджер на всю высоту правой колонки */
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+    max-height: none;
+    overflow: hidden;
+    padding: 0; /* было 10px со всех сторон */
+  }
+
+  .admin-preview #workspace {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .admin-preview #workspace .file-manager-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto !important;
+  }
+
+  .admin-preview #workspace .file-manager-main {
+    min-height: 0;
+  }
+
+  /* Делаем контейнер файлового менеджера «родным» для ячейки */
+  .admin-preview .file-manager-container {
+    height: 100%; /* вместо 100vh из styles.css */
+    background-color: transparent; /* фон берём из страницы */
+    font-family: inherit; /* шрифт как у сайта, а не Segoe UI демки */
+  }
 }
 
 /* Мобилка: off-canvas как раньше */
 @media (max-width: 900px) {
-  body.admin-body {
-    overflow: auto;
-    height: auto;
-  }
+  /* Делаем правую область независимой по высоте от дерева */
   main.admin-body {
     display: block;
-    height: auto;
-    overflow: visible;
+    height: calc(100dvh - var(--admin-header-h, 0px));
+    min-height: calc(100dvh - var(--admin-header-h, 0px));
+    overflow: hidden;
   }
+
+  main.admin-body > section.admin-preview {
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .admin-preview .preview-scroll {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .admin-preview #workspace {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* сам менеджер пусть уверенно занимает высоту родителя */
+  .admin-preview .file-manager-container {
+    height: 100% !important;
+    min-height: 0;
+  }
+
+  /* off-canvas дерево как раньше */
   .admin-explorer {
     position: fixed;
   }
 }
+
 /* i18n-wrapper neutral on admin */
 .admin-body [data-i18n] {
   display: contents !important;
@@ -632,3 +494,226 @@
     font-size: 0.9rem;
   }
 }
+
+/* ВРЕМЕННО: прячем старую сетку файлов админки,
+   пока переносим её в новый файловый менеджер */
+.admin-preview #workspace > #content {
+  display: none !important;
+}
+
+/* === Встраиваем файловый менеджер в правую колонку админки === */
+
+/* Делаем контейнер файлового менеджера "родным" для ячейки */
+.admin-preview .file-manager-container {
+  height: 100% !important; /* вместо calc(100vh - 40px) */
+  max-width: none !important; /* убираем ограничение по ширине */
+  margin: 0 !important; /* без центровки карточкой */
+  border-radius: 0 !important; /* без скругления у краёв ячейки */
+  box-shadow: none !important; /* убираем "карту" поверх страницы */
+  background: transparent !important; /* фон берём из страницы админки */
+}
+.admin-preview .file-manager-container .panel .panel-content {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Force full-height workspace even when tree is hidden */
+main.admin-body {
+  height: calc(100dvh - var(--admin-header-h, 0px));
+  min-height: calc(100dvh - var(--admin-header-h, 0px));
+  overflow: hidden;
+}
+
+main.admin-body > section.admin-preview {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-preview .preview-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+  overflow: hidden;
+  padding: 0;
+}
+
+.admin-preview #workspace {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.admin-preview .file-manager-container {
+  height: 100%;
+  min-height: 0;
+}
+
+/* =================================
+вставка
+================================*/
+
+/* MOBILE FIXES (admin): поднять бургер-меню над файловым менеджером
+   ВАЖНО: НЕ меняем position у nav/#main-nav — только слои (z-index). */
+
+#header.portfolio-header {
+  z-index: 9000;
+}
+
+/* nav уже позиционируется в main-styles.css; просто поднимаем слой */
+#header.portfolio-header #main-nav {
+  z-index: 9010;
+}
+
+/* кнопка бургера и выпадашка */
+#header.portfolio-header .nav-toggle {
+  z-index: 9020;
+}
+#header.portfolio-header .nav-links {
+  z-index: 9030;
+  position: relative;
+}
+
+/* сам файловый менеджер — ниже хедера */
+.file-manager-container,
+.admin-body,
+.admin-preview {
+  position: relative;
+  z-index: 1;
+}
+
+/* Админ-дерево (дровер) — поверх менеджера */
+@media (max-width: 900px) {
+  .admin-backdrop {
+    z-index: 8500;
+  }
+  .admin-explorer {
+    z-index: 8600;
+  }
+
+  /* на всякий — если вдруг потерялась анимация открытия */
+  .admin-explorer {
+    transform: translateX(-110%);
+  }
+  .admin-explorer.is-open {
+    transform: translateX(0);
+  }
+}
+
+/* =========================
+   MOBILE FIXES (admin)
+   ========================= */
+
+/* (3) Header dropdown (burger) must be above the file manager */
+#header.portfolio-header,
+header.portfolio-header {
+  position: relative;
+  z-index: 7000;
+}
+
+#header.portfolio-header #main-nav .nav-links,
+header.portfolio-header #main-nav .nav-links {
+  position: relative; /* keeps z-index working even if other css changes it */
+  z-index: 7002;
+}
+
+/* ensure file manager stays behind header dropdown */
+
+.file-manager-container {
+  position: relative;
+  z-index: 1;
+}
+
+.file-manager-footer .btn-text {
+  padding-left: 5px;
+}
+
+/* (1) Tree panel as a real off-canvas drawer on narrow screens */
+@media (max-width: 900px) {
+  .admin-explorer {
+    position: fixed;
+    top: var(--admin-header-h, 0px);
+    left: 0;
+    bottom: auto;
+    height: calc(100dvh - var(--admin-header-h, 0px));
+
+    width: min(86vw, 340px);
+    max-width: 92vw;
+
+    transform: translateX(-110%);
+    transition: transform 180ms ease;
+
+    z-index: 6500;
+    overflow: auto;
+
+    background: var(--color-panel-bg);
+    border-right: 1px solid var(--border-color);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  }
+
+  .admin-explorer.is-open {
+    transform: translateX(0);
+  }
+
+  /* keep the open button clickable */
+  #adminDrawerBtn {
+    position: relative;
+    z-index: 6600;
+    background: none;
+  }
+
+  /* close button inside drawer (if it's a child of .admin-explorer) */
+  .admin-explorer .admin-drawer-close {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    z-index: 6601;
+  }
+}
+
+@media (max-width: 600px) {
+  /* текст на самых узких — прячем, оставляем иконки */
+  .file-manager-footer .btn-text {
+    display: none;
+  }
+}
+
+/* Футер на очень узких экранах: ужимаем, если не хватает — прячем разделители */
+@media (max-width: 500px) {
+  .file-manager-footer {
+    flex-wrap: nowrap; /* ключевое: НЕ переносим */
+    justify-content: space-between;
+    gap: 6px;
+    padding: 6px 6px;
+    align-items: center;
+    padding: 6px 8px;
+    gap: 4px;
+  }
+  .toolbar-separator {
+    margin: 0 6px;
+  }
+
+  .file-manager-footer .toolbar-btn {
+    padding: 6px 8px;
+    min-width: 34px;
+    height: 36px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  /* compact text buttons (your Create folder / Upload file) */
+  #create-folder-btn,
+  #upload-file-btn {
+    font-size: 12px;
+    line-height: 1.1;
+    padding: 6px 10px;
+  }
+}
+/*
+@media (max-width: 420px) {
+  .file-manager-footer .toolbar-separator {
+    display: none;
+  }
+}*/

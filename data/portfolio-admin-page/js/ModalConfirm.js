@@ -33,6 +33,18 @@ function showConfirmModal(message, onConfirm) {
   // modalBackdrop.addEventListener('click', (e) => { if (e.target === modalBackdrop) hideConfirmModal(); });
 }
 
+window.confirmModal = function confirmModal(message) {
+  return new Promise((resolve) => {
+    showConfirmModal(message, () => resolve(true));
+
+    // Перехват “Отмена”
+    const noBtn = document.getElementById("modal-confirm-no");
+    if (noBtn) {
+      noBtn.addEventListener("click", () => resolve(false), { once: true });
+    }
+  });
+};
+
 function handleConfirmYes() {
   if (confirmCallback) {
     confirmCallback(); // Вызываем переданную функцию (например, handleDelete)

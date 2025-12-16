@@ -1,0 +1,85 @@
+:root {
+  /* Метрики для JS */
+  --font-size: 16px;
+  --line-height-factor: 1.5; /* 16px * 1.5 = 24px высота строки */
+  --padding: 50px;
+  --page-height: 800px;
+  --page-width: 400px;
+}
+
+body {
+  background-color: #f0f0f0;
+  margin: 0;
+  font-family: serif; /* Важно для точного измерения в Canvas */
+}
+
+.book-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.book {
+  display: flex; /* Для двух страниц */
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.page {
+  /* Фиксированные размеры, используемые в метриках JS */
+  width: var(--page-width);
+  height: var(--page-height);
+  padding: var(--padding);
+  background-color: #fffaf0; /* Цвет бумаги */
+  box-sizing: border-box; /* padding включен в ширину/высоту */
+
+  /* Стили текста */
+  font-size: var(--font-size);
+  line-height: var(--line-height-factor);
+
+  /* Стиль курсора и редактируемости */
+  white-space: pre-wrap; /* Сохраняет пробелы и переводы строк, но переносит текст */
+  word-wrap: break-word;
+  overflow: hidden; /* Ключевой момент: текст должен обрезаться, если не помещается */
+
+  /* Визуальный эффект сгиба */
+  border-right: 1px solid #ccc;
+  position: relative;
+}
+
+.page:nth-child(even) {
+  border-right: none;
+  border-left: 1px solid #ccc;
+  box-shadow: inset 5px 0 15px -8px rgba(0, 0, 0, 0.2); /* Сгиб слева */
+}
+
+/* Боковые панели */
+.sidebar {
+  width: 150px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 900px) {
+  .book {
+    flex-direction: column; /* Страницы в столбик */
+    width: 100%;
+    box-shadow: none;
+  }
+  .page {
+    width: 100vw;
+    height: auto; /* Позволяем странице скроллиться на мобильных */
+    min-height: 100vh;
+    border: none;
+    padding: 20px;
+    box-shadow: none;
+  }
+  /* Скрываем боковые панели инструментов */
+  .sidebar {
+    display: none;
+  }
+}
