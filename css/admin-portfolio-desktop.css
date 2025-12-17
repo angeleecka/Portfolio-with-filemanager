@@ -160,6 +160,7 @@
   max-width: 100%;
   max-height: 100%;
   overflow: hidden;
+  z-index: 99000;
 }
 
 .mlb-stage img {
@@ -711,9 +712,3 @@ header.portfolio-header #main-nav .nav-links {
     padding: 6px 10px;
   }
 }
-/*
-@media (max-width: 420px) {
-  .file-manager-footer .toolbar-separator {
-    display: none;
-  }
-}*/

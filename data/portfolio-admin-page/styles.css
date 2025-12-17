@@ -114,6 +114,16 @@
   min-width: 0;
 }
 
+/* Breadcrumbs: делаем горизонтальный скроллбар тоньше (перебиваем общий height: 8px) */
+.panel-header-breadcrumbs::-webkit-scrollbar {
+  height: 2px;
+}
+
+.panel-header-breadcrumbs::-webkit-scrollbar-thumb {
+  border: 0 !important; /* важно: иначе "толстеет" из-за глобальной рамки */
+  border-radius: 999px;
+}
+
 .breadcrumb-link {
   cursor: pointer;
   /* Используем акцентный цвет для ссылок */
@@ -369,6 +379,10 @@
 
   #toolbar .toolbar-btn {
     padding: 6px 8px; /* ужимаем кнопки */
+  }
+
+  .file-manager-footer {
+    justify-content: center;
   }
 }
 
@@ -795,7 +809,7 @@ body.resizing {
 
 /* Chrome / Edge / Safari */
 *::-webkit-scrollbar {
-  width: 4px;
+  width: 2px;
   height: 8px;
 }
 
@@ -805,8 +819,9 @@ body.resizing {
 
 *::-webkit-scrollbar-thumb {
   background: rgba(120, 70, 40, 0.55);
-  border-radius: 10px;
-  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+  /* border: 2px solid rgba(0, 0, 0, 0.08);*/
+  width: 2px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
@@ -1082,6 +1097,12 @@ body.resizing {
   background: var(--bg-primary);
 }
 
+.file-tile .tile-thumb-image {
+  pointer-events: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
 .file-tile .tile-ico {
   font-size: 3rem;
   line-height: 1;
@@ -1132,5 +1153,36 @@ body.resizing {
 @media (max-width: 420px) {
   #toolbar .toolbar-separator {
     display: none; /* если тесно — убираем разделители */
+  }
+}
+
+/* Lightbox must be above header/mobile menu */
+#mediaLightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+}
+
+#mediaLightbox .mlb-btn {
+  z-index: 100001;
+}
+*/
+
+/* Пока открыт лайтбокс — хедер не кликается (иначе бургер перехватывает) */ 
+body.mlb-open header {
+  pointer-events: none;
+}
+
+/* Пока открыт лайтбокс — прячем шапку/бургер визуально */
+body.mlb-open header,
+body.mlb-open .burger,
+body.mlb-open #burgerBtn {
+  visibility: hidden !important;
+}
+
+/* Mobile: центрируем ряды плиток, чтобы не было перекоса вправо */
+@media (max-width: 900px) {
+  .file-list-grid {
+    justify-content: center;
   }
 }

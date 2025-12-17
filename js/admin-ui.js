@@ -358,6 +358,7 @@ function initAdminLassoSelection() {
   // [{ type: 'image'|'video', src: string, caption: string }]
   let items = [];
   let index = 0;
+  let onKey = null;
 
   function collectItems() {
     const cells = Array.from(document.querySelectorAll("#content .js-file"));
@@ -436,8 +437,61 @@ function initAdminLassoSelection() {
     if (mlbCounter) mlbCounter.textContent = `${index + 1} / ${items.length}`;
   }
 
-  function open(i = 0) {
+  function normalizeExternalItems(raw) {
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map((it) => {
+        if (!it) return null;
+
+        const type =
+          it.type === "video" || it.kind === "video" ? "video" : "image";
+        const src = it.src || it.url || it.full || it.href || "";
+        const caption = it.caption || it.title || it.name || "";
+
+        return src ? { type, src, caption } : null;
+      })
+      .filter(Boolean);
+  }
+
+  function loadItemsForOpen() {
+    // 1) Если есть «старая» сетка (#content) и она реально заполнена — берём её
+    const grid = document.getElementById("content");
+    const gridHasCells = !!(
+      grid &&
+      !grid.hidden &&
+      grid.querySelector &&
+      grid.querySelector(".js-file")
+    );
+
+    if (gridHasCells) {
+      collectItems();
+      return;
+    }
+
+    // 2) Иначе — пробуем взять список из FileOperations (сплит-менеджер)
+    const ext = normalizeExternalItems(window.__lightboxItems);
+    if (ext.length) {
+      items = ext;
+      return;
+    }
+
+    // 3) Фоллбек
     collectItems();
+  }
+
+  // openLightbox(index) — как раньше
+  // openLightbox(itemsArray, index) — для сплит-менеджера
+  function open(arg1, arg2) {
+    let startIndex = 0;
+
+    if (Array.isArray(arg1)) {
+      items = normalizeExternalItems(arg1);
+      startIndex = Number.isFinite(arg2) ? arg2 : 0;
+    } else {
+      startIndex = Number.isFinite(arg1) ? arg1 : 0;
+      loadItemsForOpen();
+    }
+
     if (!items.length) return;
 
     if (typeof hidePreview === "function") {
@@ -448,12 +502,26 @@ function initAdminLassoSelection() {
     mediaLightbox.setAttribute("aria-hidden", "false");
     document.body.classList.add("mlb-open");
 
-    showAt(i);
+    if (!onKey) {
+      onKey = (e) => {
+        if (e.key === "Escape") close();
+        if (e.key === "ArrowRight") next();
+        if (e.key === "ArrowLeft") prev();
+      };
+      document.addEventListener("keydown", onKey);
+    }
+
+    showAt(startIndex);
   }
 
   function close() {
     mediaLightbox.hidden = true;
     mediaLightbox.setAttribute("aria-hidden", "true");
+    if (onKey) {
+      document.removeEventListener("keydown", onKey);
+      onKey = null;
+    }
+
     document.body.classList.remove("mlb-open");
     mlbStage.innerHTML = "";
   }
@@ -466,7 +534,7 @@ function initAdminLassoSelection() {
     showAt(index - 1);
   }
 
-  // 🔴 Главное: обработчик клика на КОНТЕЙНЕР в capture-фазе.
+  // обработчик клика на КОНТЕЙНЕР в capture-фазе.
   // Здесь мы перехватываем стрелки/крестик/фон и не даём другим слушателям
   // вмешаться и перерисовать "битую" картинку.
   function handleClickCapture(e) {
@@ -475,7 +543,10 @@ function initAdminLassoSelection() {
     const isNext = t.closest && t.closest("#mlbNext");
     const isPrev = t.closest && t.closest("#mlbPrev");
     const isClose = t.closest && t.closest("#mlbClose");
-    const isBackdrop = t === mediaLightbox;
+    const isBackdrop =
+      t === mediaLightbox ||
+      (t.classList && t.classList.contains("mlb-backdrop")) ||
+      (t.closest && t.closest(".mlb-backdrop"));
 
     if (!isNext && !isPrev && !isClose && !isBackdrop) {
       return; // не наша цель — пропускаем дальше
@@ -606,6 +677,10 @@ function showToast(
   actionFn = null,
   autoHide = true
 ) {
+  // By default we hide "success" toasts (too noisy and sometimes duplicated).
+  // To re-enable: window.ADMIN_TOAST_SUCCESS = true
+  if (type === "success" && window.ADMIN_TOAST_SUCCESS !== true) return;
+
   const toast = document.createElement("div");
   toast.className = `toast toast-${type}`;
 

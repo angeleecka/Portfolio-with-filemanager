@@ -13,6 +13,7 @@ coverage/
 trash/
 versions/
 uploads/_tmp/
+trash/Upload
 
 # OS junk
 .DS_Store
@@ -37,3 +38,4 @@ scripts/_tmp/
 # swagger-редакторы/кеши
 docs/
 docs/*.tmp
+reader/

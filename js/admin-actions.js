@@ -83,9 +83,9 @@ async function handleResponse(res) {
     (text && text.trim()) ||
     (ok ? "Operation completed" : "Operation error");
 
-  // ✅ всегда показываем тост (и успех, и ошибка)
-  if (typeof showToast === "function") {
-    showToast(msg, ok ? "success" : "error");
+  // Show toasts only for errors (success is too noisy and can be duplicated)
+  if (!ok && typeof showToast === "function") {
+    showToast(msg, "error");
   }
 
   // ✅ авто-refresh только на успех

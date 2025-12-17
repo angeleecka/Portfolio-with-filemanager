@@ -203,6 +203,12 @@ function renderFileTree(structure, activePath) {
       // Используем глобальную функцию перехода из FileOperations.js
       window.navigateToFolder(newPath, targetPanelId);
 
+      // ✅ Mobile: после перехода закрываем левую off-canvas панель
+      const explorer = document.querySelector(".admin-explorer");
+      if (explorer && window.matchMedia("(max-width: 900px)").matches) {
+        explorer.classList.remove("is-open");
+      }
+
       // Сброс всех выделений и выделение нового
       treeContainer
         .querySelectorAll(".tree-item")

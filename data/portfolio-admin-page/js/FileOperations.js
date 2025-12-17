@@ -73,6 +73,10 @@ window.__fmState = window.__fmState || {
   paths: {},
 };
 
+// Lightbox bridge (для admin-ui.js)
+window.__lightboxItemsByPanel = window.__lightboxItemsByPanel || {};
+window.__lightboxItems = window.__lightboxItems || [];
+
 let isRefreshing = false;
 
 function ensurePathArray(value) {
@@ -331,6 +335,14 @@ window.refreshFileManager = async function () {
   }
 };
 
+function fmIsTouchUi() {
+  return (
+    (window.matchMedia &&
+      window.matchMedia("(hover: none) and (pointer: coarse)").matches) ||
+    (navigator.maxTouchPoints && navigator.maxTouchPoints > 0)
+  );
+}
+
 // ===============================
 // Split DnD (diagnostic stage)
 // ===============================
@@ -360,7 +372,7 @@ function fmClearDnDClasses(root = document) {
     .querySelectorAll(".fm-dnd-dragging")
     .forEach((el) => el.classList.remove("fm-dnd-dragging"));
 }
-
+/*
 function bindSplitDnD(panelId) {
   const list = document.getElementById(panelId);
   if (!list || list.dataset.dndBound === "1") return;
@@ -368,8 +380,8 @@ function bindSplitDnD(panelId) {
 
   // dragstart (делегированно)
   list.addEventListener("dragstart", (e) => {
-    const item = e.target.closest(".file-row, .file-tile");
-    if (!item) return;
+    const itemEl = e.target.closest(".file-row, .file-tile");
+    if (!itemEl) return;
 
     const name = item.dataset.name;
     const type = item.dataset.type;
@@ -455,7 +467,7 @@ function bindSplitDnD(panelId) {
     });
   });
 }
-
+*/
 // --- 3. Логика операций (Открыть, Переименовать, Удалить) ---
 
 function buildPreviewUrl(pathArr, name) {
@@ -466,6 +478,33 @@ function buildPreviewUrl(pathArr, name) {
     .map(encodeURIComponent);
 
   return `/uploads/${parts.join("/")}`;
+}
+
+function fmUpdateLightboxItems(listId, pathArr, entries) {
+  const isImageName = (n) =>
+    /\.(jpg|jpeg|png|webp|gif|avif|bmp|svg)$/i.test(String(n || ""));
+  const isVideoName = (n) => /\.(mp4|webm|mov|m4v|ogg)$/i.test(String(n || ""));
+
+  const items = [];
+
+  for (const [name, item] of entries || []) {
+    if (!item || item.type === "folder") continue;
+    if (!(isImageName(name) || isVideoName(name))) continue;
+
+    items.push({
+      type: isVideoName(name) ? "video" : "image",
+      src: buildPreviewUrl(pathArr, name),
+      name,
+      caption: name,
+    });
+  }
+
+  window.__lightboxItemsByPanel[listId] = items;
+
+  // Важно: window.__lightboxItems должен соответствовать АКТИВНОЙ панели
+  if (activeListId === listId) {
+    window.__lightboxItems = items;
+  }
 }
 
 function getListPanelIdFromListId(listId) {
@@ -947,10 +986,12 @@ function bindSplitDnD(listId) {
   };
 
   list.addEventListener("dragstart", (e) => {
-    const el = e.target.closest(".file-row, .file-tile");
-    if (!el) return;
+    // const el = e.target.closest(".file-row, .file-tile");
+    // if (!el) return;
+    const itemEl = e.target.closest(".file-row, .file-tile");
+    if (!itemEl) return;
 
-    const name = el.dataset.name;
+    const name = itemEl.dataset.name;
     if (!name || name === "." || name === "..") return;
 
     const sourceBase = fmServerBaseFromList(list);
@@ -960,7 +1001,7 @@ function bindSplitDnD(listId) {
       list.querySelectorAll(".selected[data-name]")
     ).filter((n) => n.dataset.name && n.dataset.name !== "..");
 
-    const pack = selected.length ? selected : [el];
+    const pack = selected.length ? selected : [itemEl];
 
     pack.forEach((n) => n.classList.add("dragging"));
 
@@ -1003,6 +1044,8 @@ function bindSplitDnD(listId) {
 
     allow(e);
     folder.classList.add("drop-target");
+
+    e.preventDefault();
   });
 
   list.addEventListener("dragleave", (e) => {
@@ -1134,6 +1177,8 @@ function renderFileList(path, containerId, viewMode) {
       ([, item]) => typeof item === "object" && item.type
     );
 
+    fmUpdateLightboxItems(containerId, path, entries);
+
     const sortedEntries = fmSortEntries(entries, sortState);
 
     for (const [name, item] of sortedEntries) {
@@ -1211,6 +1256,27 @@ function renderFileList(path, containerId, viewMode) {
 
         setActivePanel(row.dataset.panel);
         setSelectedInPanel(row.dataset.panel, row, e);
+
+        // ✅ Mobile-friendly: один тап по медиа-файлу открывает lightbox
+        const type = row.dataset.type;
+        const name = row.dataset.name;
+
+        // ✅ открываем лайтбокс по одному клику ТОЛЬКО на тач-устройствах
+        if (fmIsTouchUi() && type === "file") {
+          const panelId = row.dataset.panel;
+
+          // найдём индекс файла в текущем списке lightbox items
+          const items =
+            window.__lightboxItemsByPanel?.[panelId] ||
+            window.__lightboxItems ||
+            [];
+          const idx = items.findIndex((it) => it && it.name === name);
+
+          // открываем lightbox только если это медиа (есть в items)
+          if (idx >= 0 && typeof window.openLightbox === "function") {
+            window.openLightbox(idx);
+          }
+        }
       });
 
       row.addEventListener("dblclick", rowLogic);
@@ -1239,6 +1305,8 @@ function renderFileList(path, containerId, viewMode) {
     const entries = Object.entries(currentFolder).filter(
       ([, item]) => typeof item === "object" && item.type
     );
+
+    fmUpdateLightboxItems(containerId, path, entries);
 
     const sortedEntries = [
       ...entries.filter(([, item]) => item.type === "folder"),
@@ -1312,6 +1380,24 @@ function renderFileList(path, containerId, viewMode) {
 
         setActivePanel(tile.dataset.panel);
         setSelectedInPanel(tile.dataset.panel, tile, e);
+
+        // ✅ Mobile-friendly: один тап по медиа-файлу открывает lightbox
+        if (!fmIsTouchUi()) return;
+
+        const type = tile.dataset.type;
+        const name = tile.dataset.name;
+        if (type !== "file") return;
+
+        const panelId = tile.dataset.panel;
+        const items =
+          window.__lightboxItemsByPanel?.[panelId] ||
+          window.__lightboxItems ||
+          [];
+        const idx = items.findIndex((it) => it && it.name === name);
+
+        if (idx >= 0 && typeof window.openLightbox === "function") {
+          window.openLightbox(idx);
+        }
       });
     });
   }
@@ -1339,6 +1425,21 @@ function formatPathSegment(segment) {
   const withSpaces = segment.replace(/[_-]+/g, " ");
   return withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1);
 }
+
+/**
+ * Возвращает "красивое" имя сегмента пути для UI.
+ * Нужна, чтобы внутренний корень Upload отображался как Portfolio.
+ */
+window.getDisplayPathSegment = function getDisplayPathSegment(segment) {
+  const s = String(segment || "").trim();
+  if (!s) return "";
+
+  // внутренний корень данных = Upload, внешний UI = Portfolio
+  if (s.toLowerCase() === "upload") return "Portfolio";
+
+  // обычная форматировка для остальных сегментов
+  return formatPathSegment(s);
+};
 
 /**
  * Обновляет заголовок и "крошки" панели по её пути.
@@ -1518,6 +1619,8 @@ function setActivePanel(listId) {
 
   viewRowBtn.classList.toggle("active", viewMode === "row");
   viewTileBtn.classList.toggle("active", viewMode === "tile");
+
+  window.__lightboxItems = window.__lightboxItemsByPanel?.[listId] || [];
 }
 
 window.setActivePanel = setActivePanel;
@@ -2126,6 +2229,110 @@ window.addEventListener("load", async () => {
         window.showContextMenu?.(e, panelTarget, pathArr);
       },
       { capture: true }
+    );
+
+    // ✅ Mobile / touch: long-press fallback for context menu
+    // Работает и для tiles, и для rows, и для пустого места панели.
+    const FM_LONG_PRESS_MS = 550;
+    const FM_MOVE_TOL = 10;
+
+    let fmLpTimer = 0;
+    let fmLpStart = null;
+    let fmLpFired = false;
+
+    const fmLpClear = () => {
+      if (fmLpTimer) {
+        clearTimeout(fmLpTimer);
+        fmLpTimer = 0;
+      }
+      fmLpStart = null;
+    };
+
+    panelEl.addEventListener(
+      "pointerdown",
+      (e) => {
+        if (e.pointerType !== "touch") return;
+        if (e.target.closest("#context-menu")) return;
+
+        fmLpFired = false;
+        fmLpStart = {
+          x: e.clientX,
+          y: e.clientY,
+          pid: e.pointerId,
+          target: e.target,
+        };
+
+        fmLpTimer = window.setTimeout(() => {
+          if (!fmLpStart) return;
+          fmLpFired = true;
+
+          // активируем панель
+          setActivePanel(listId);
+
+          // текущий путь панели
+          const domPath = (listEl.dataset.path || "").trim();
+          const pathArr = domPath ? domPath.split("/").filter(Boolean) : [];
+
+          // если лонг-тап по элементу — item scope, иначе panel scope
+          const onItem = fmLpStart.target.closest(
+            '[data-type="file"], [data-type="folder"]'
+          );
+
+          // showContextMenu ожидает event с clientX/Y + preventDefault/stopPropagation
+          const fakeEvt = {
+            clientX: fmLpStart.x,
+            clientY: fmLpStart.y,
+            preventDefault() {},
+            stopPropagation() {},
+          };
+
+          if (onItem) {
+            window.showContextMenu?.(fakeEvt, onItem, pathArr);
+          } else {
+            const panelTarget = {
+              dataset: { panel: listId, type: "panel", name: "" },
+            };
+            window.showContextMenu?.(fakeEvt, panelTarget, pathArr);
+          }
+        }, FM_LONG_PRESS_MS);
+      },
+      { capture: true, passive: true }
+    );
+
+    panelEl.addEventListener(
+      "pointermove",
+      (e) => {
+        if (!fmLpStart || e.pointerId !== fmLpStart.pid) return;
+        const dx = Math.abs(e.clientX - fmLpStart.x);
+        const dy = Math.abs(e.clientY - fmLpStart.y);
+        if (dx > FM_MOVE_TOL || dy > FM_MOVE_TOL) fmLpClear(); // пользователь скроллит/двигает
+      },
+      { capture: true, passive: true }
+    );
+
+    panelEl.addEventListener(
+      "pointerup",
+      (e) => {
+        if (fmLpStart && e.pointerId === fmLpStart.pid) fmLpClear();
+      },
+      { capture: true, passive: true }
+    );
+
+    panelEl.addEventListener("pointercancel", fmLpClear, {
+      capture: true,
+      passive: true,
+    });
+
+    // ✅ гасим “клик после лонг-тапа”, иначе может открывать preview/фото
+    panelEl.addEventListener(
+      "click",
+      (e) => {
+        if (!fmLpFired) return;
+        e.preventDefault();
+        e.stopPropagation();
+        fmLpFired = false;
+      },
+      true
     );
   }
 
