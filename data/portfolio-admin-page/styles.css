@@ -645,6 +645,12 @@ body {
   background-color: var(--hover-bg);
 }
 
+/* Активная (выбранная) папка в дереве */
+.tree-item.selected > .folder-name-wrapper > .folder-name,
+.tree-item.selected > .folder-name {
+  background-color: var(--select-bg);
+}
+
 /* 9. Стили Иконок (Временные) */
 
 .icon {
@@ -1185,4 +1191,36 @@ body.mlb-open #burgerBtn {
   .file-list-grid {
     justify-content: center;
   }
+}
+
+/* FM: прямоугольное выделение */
+.fm-marquee {
+  position: absolute;
+  pointer-events: none;
+  border: 1px dashed rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  z-index: 50;
+}
+
+/* Touch DnD (mobile) */
+body.fm-touch-dnd {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.fm-touch-ghost {
+  position: fixed;
+  left: 0;
+  top: 0;
+  transform: translate(-9999px, -9999px);
+  pointer-events: none;
+  z-index: 2147483647;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(30, 30, 30, 0.75);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1;
+  backdrop-filter: blur(6px);
 }

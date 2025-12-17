@@ -145,6 +145,20 @@ function buildTreeHTML(folderContents, currentActivePath, parentPath = []) {
  * @param {string[]} activePath - Текущий активный путь для выделения
  */
 function renderFileTree(structure, activePath) {
+  // Нормализуем путь: менеджер может жить с "Portfolio", а дерево — с "Upload"
+  const normalizeTreePath = (p) => {
+    const arr = Array.isArray(p)
+      ? [...p]
+      : String(p || "")
+          .split("/")
+          .filter(Boolean);
+    if (!arr.length) return [ROOT_FOLDER_NAME];
+    if (arr[0] === "Portfolio") arr[0] = ROOT_FOLDER_NAME;
+    return arr;
+  };
+
+  const activePathNorm = normalizeTreePath(activePath);
+
   // ✅ ИЗМЕНЕНО: Проверка на ROOT_FOLDER_NAME
   if (!structure[ROOT_FOLDER_NAME]) {
     treeContainer.innerHTML = `<div>Ошибка: Папка ${ROOT_FOLDER_NAME} не найдена.</div>`;
@@ -158,7 +172,7 @@ function renderFileTree(structure, activePath) {
   // Начальный корневой элемент 'Portfolio'
   const rootPath = [ROOT_FOLDER_NAME];
   const isRootSelected =
-    JSON.stringify(activePath) === JSON.stringify(rootPath);
+    JSON.stringify(activePathNorm) === JSON.stringify(rootPath);
 
   const hasChildren = hasSubfolders(structure[ROOT_FOLDER_NAME]);
   const chevronIcon =
@@ -183,7 +197,7 @@ function renderFileTree(structure, activePath) {
              </span>`; // <-- Отображаем "Portfolio/"
 
   // Рендерим вложенные элементы
-  html += buildTreeHTML(structure[ROOT_FOLDER_NAME], activePath, rootPath);
+  html += buildTreeHTML(structure[ROOT_FOLDER_NAME], activePathNorm, rootPath);
 
   html += `</li></ul>`;
   treeContainer.innerHTML = html;
@@ -210,10 +224,10 @@ function renderFileTree(structure, activePath) {
       }
 
       // Сброс всех выделений и выделение нового
-      treeContainer
+      /*treeContainer
         .querySelectorAll(".tree-item")
         .forEach((item) => item.classList.remove("selected"));
-      e.currentTarget.closest(".tree-item").classList.add("selected");
+      e.currentTarget.closest(".tree-item").classList.add("selected");*/
     });
   });
 

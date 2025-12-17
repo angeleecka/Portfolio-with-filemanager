@@ -335,6 +335,36 @@ window.refreshFileManager = async function () {
   }
 };
 
+document.getElementById("preview-btn")?.addEventListener("click", () => {
+  const panelId = window.__fmState?.activePanel || "file-list-1";
+  const list = document.getElementById(panelId);
+  if (!list) return;
+
+  const selected = Array.from(list.querySelectorAll(".selected[data-name]"));
+  if (selected.length !== 1) return;
+
+  const el = selected[0];
+  const name = el.dataset.name;
+  const type = el.dataset.type;
+
+  if (!name || name === "." || name === ".." || type === "folder") return;
+
+  const items =
+    window.__lightboxItemsByPanel?.[panelId] || window.__lightboxItems || [];
+  const idx = items.findIndex((it) => it && it.name === name);
+
+  if (idx >= 0 && typeof window.openLightbox === "function") {
+    window.openLightbox(idx);
+    return;
+  }
+
+  // не-медиа: показываем обычный preview
+  const pathArr =
+    (window.__fmState?.paths && window.__fmState.paths[panelId]) ||
+    (list.dataset.path ? list.dataset.path.split("/").filter(Boolean) : []);
+  showPreviewFM({ type, name, path: pathArr, panelId });
+});
+
 function fmIsTouchUi() {
   return (
     (window.matchMedia &&
@@ -635,29 +665,92 @@ function handleOpen(type, name, path, panelId) {
   // ПАПКА
   if (type === "folder") {
     const base = Array.isArray(path) ? path.slice() : [];
+
+    // ✅ up-level
+    if (name === ".." || name === ".") {
+      const up = base.length > 1 ? base.slice(0, -1) : base;
+      window.navigateToFolder?.(up, pid);
+      return;
+    }
+
     const nextPath =
       base.length && base[base.length - 1] === name ? base : base.concat(name);
+
     window.navigateToFolder?.(nextPath, pid);
     return;
   }
 
-  // ФАЙЛ / ВИДЕО => предпросмотр
-  showPreviewFM({ type, name, path, panelId: pid });
+  // ФАЙЛ: если это медиа — открываем lightbox (по осознанному действию "Open")
+  const isImage = /\.(jpg|jpeg|png|webp|gif|avif|bmp|svg)$/i.test(
+    String(name || "")
+  );
+  const isVideo = /\.(mp4|webm|mov|m4v|ogg)$/i.test(String(name || ""));
+
+  const items =
+    window.__lightboxItemsByPanel?.[pid] || window.__lightboxItems || [];
+
+  const idx = items.findIndex((it) => it && it.name === name);
+
+  if (
+    (isImage || isVideo) &&
+    idx >= 0 &&
+    typeof window.openLightbox === "function"
+  ) {
+    window.openLightbox(idx);
+    return;
+  }
+
+  // иначе (или если не нашли индекс) — обычный previewPane
+  showPreviewFM({ type: isVideo ? "video" : type, name, path, panelId: pid });
 }
 
-function handleDelete(path, name) {
-  window.showConfirmModal(
-    `Вы уверены, что хотите удалить "${name}" из папки /${normalizePathForServer(
-      path
-    ).join("/")}?`,
-    async () => {
-      const basePath = normalizePathForServer(path).join("/");
-      await window.deleteItem(name, {
+async function handleDelete(path, clickedName, panelId) {
+  const basePath = (path || []).join("/");
+
+  // 1) Собираем пачку выделенных в этой панели
+  let names = [];
+  const list = panelId ? document.getElementById(panelId) : null;
+
+  if (list) {
+    names = Array.from(list.querySelectorAll(".selected[data-name]"))
+      .map((n) => n.dataset.name)
+      .filter((n) => n && n !== "." && n !== "..");
+  }
+
+  // 2) Если выделения нет — удаляем только то, по чему вызвали действие
+  //    Или если кликнули по одному, который НЕ входит в текущее выделение — тоже удаляем только его
+  const clickedIsInSelection = names.includes(clickedName);
+  if (!names.length || !clickedIsInSelection) {
+    names = [clickedName].filter((n) => n && n !== "." && n !== "..");
+  }
+
+  // уникализируем (на всякий)
+  names = [...new Set(names)];
+
+  if (!names.length) return;
+
+  // 3) Подтверждение один раз
+  const msg =
+    names.length === 1
+      ? `Delete "${names[0]}"?`
+      : `Delete ${names.length} selected item(s)?`;
+
+  const run = async () => {
+    for (const nm of names) {
+      // ВАЖНО: skipConfirm=true, потому что мы уже спросили один раз
+      await window.deleteItem?.(nm, {
         basePathOverride: basePath,
         skipConfirm: true,
       });
     }
-  );
+  };
+
+  if (typeof window.showConfirmModal === "function") {
+    window.showConfirmModal(msg, run);
+  } else {
+    // запасной вариант
+    if (confirm(msg)) await run();
+  }
 }
 
 // ===============================
@@ -1106,6 +1199,200 @@ function bindSplitDnD(listId) {
   );
 }
 
+// ======================================================================
+// [FM] Touch DnD: drag selected items into a folder (mobile only)
+// ======================================================================
+
+function bindTouchDnD(listId) {
+  const list = document.getElementById(listId);
+  if (!list || list.dataset.touchDndBound === "1") return;
+  list.dataset.touchDndBound = "1";
+
+  // включаем только на тач-UI
+  if (!(typeof fmIsTouchUi === "function" && fmIsTouchUi())) return;
+
+  const TOL = 10;
+
+  let dragging = false;
+  let start = null;
+  let ghost = null;
+  let targetFolder = null;
+
+  const clearDropMarks = () => {
+    document
+      .querySelectorAll(".drop-target, .fm-dnd-drop-target")
+      .forEach((n) => n.classList.remove("drop-target", "fm-dnd-drop-target"));
+  };
+
+  const ensureGhost = () => {
+    if (ghost) return ghost;
+    ghost = document.createElement("div");
+    ghost.className = "fm-touch-ghost";
+    ghost.textContent = "Moving…";
+    document.body.appendChild(ghost);
+    return ghost;
+  };
+
+  const moveGhost = (x, y, label) => {
+    const g = ensureGhost();
+    if (label) g.textContent = label;
+    g.style.transform = `translate(${x + 12}px, ${y + 12}px)`;
+  };
+
+  const getSelectedPack = () => {
+    const selected = Array.from(
+      list.querySelectorAll(".selected[data-name]")
+    ).filter(
+      (n) => n.dataset.name && n.dataset.name !== ".." && n.dataset.name !== "."
+    );
+    if (selected.length) return selected;
+
+    // если ничего не выделено — тянем тот элемент, с которого стартовали
+    return [];
+  };
+
+  const startDrag = (e, itemEl) => {
+    dragging = true;
+    document.body.classList.add("fm-touch-dnd");
+    clearDropMarks();
+    targetFolder = null;
+
+    setActivePanel(listId);
+
+    // если не было выделения — выделяем этот элемент
+    if (!itemEl.classList.contains("selected")) {
+      setSelectedInPanel(listId, itemEl, e);
+    }
+
+    const pack = getSelectedPack();
+    const label =
+      pack.length > 1
+        ? `Move ${pack.length} items`
+        : `Move ${itemEl.dataset.name}`;
+    moveGhost(e.clientX, e.clientY, label);
+  };
+
+  const stopDrag = async () => {
+    if (!dragging) return;
+
+    dragging = false;
+    document.body.classList.remove("fm-touch-dnd");
+    clearDropMarks();
+
+    if (ghost) {
+      ghost.remove();
+      ghost = null;
+    }
+
+    // если не бросили на папку — просто выходим
+    if (!targetFolder) return;
+
+    const folderName = targetFolder.dataset.name;
+    if (!folderName || folderName === ".." || folderName === ".") return;
+
+    // source
+    const sourceBase = fmServerBaseFromList(list);
+
+    // items (берём выделенные)
+    const pack = Array.from(
+      list.querySelectorAll(".selected[data-name]")
+    ).filter(
+      (n) => n.dataset.name && n.dataset.name !== ".." && n.dataset.name !== "."
+    );
+    if (!pack.length) return;
+
+    const items = pack.map((n) => ({
+      name: n.dataset.name,
+      kind: n.dataset.type === "folder" ? "folder" : "file",
+    }));
+
+    // target base
+    const base = fmServerBaseFromList(list);
+    const targetBase = base ? `${base}/${folderName}` : folderName;
+
+    try {
+      await fmMoveItems(sourceBase || "", items, targetBase || "");
+      window.showToast?.(`Moved ${items.length} item(s)`, "success");
+      await window.refreshFileManager?.();
+    } catch (err) {
+      console.error("[touchDnD] move error:", err);
+      window.showToast?.("Operation failed", "error");
+    }
+  };
+
+  list.addEventListener(
+    "pointerdown",
+    (e) => {
+      if (e.pointerType !== "touch") return;
+      if (e.target.closest("#context-menu")) return;
+
+      const itemEl = e.target.closest(".file-row, .file-tile");
+      if (!itemEl) return;
+
+      const name = itemEl.dataset.name;
+      if (!name || name === ".." || name === ".") return;
+
+      start = { x: e.clientX, y: e.clientY, pid: e.pointerId, itemEl };
+      targetFolder = null;
+    },
+    { capture: true, passive: true }
+  );
+
+  list.addEventListener(
+    "pointermove",
+    (e) => {
+      if (!start || e.pointerId !== start.pid) return;
+
+      const dx = Math.abs(e.clientX - start.x);
+      const dy = Math.abs(e.clientY - start.y);
+
+      // начинаем dnd только если реально потянули
+      if (!dragging && (dx > TOL || dy > TOL)) {
+        startDrag(e, start.itemEl);
+      }
+
+      if (!dragging) return;
+
+      moveGhost(e.clientX, e.clientY);
+
+      // ищем папку под пальцем
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      const folder = el?.closest?.(
+        '.file-row[data-type="folder"], .file-tile[data-type="folder"]'
+      );
+
+      clearDropMarks();
+      targetFolder = null;
+
+      if (folder) {
+        folder.classList.add("drop-target");
+        targetFolder = folder;
+      }
+    },
+    { capture: true, passive: true }
+  );
+
+  list.addEventListener(
+    "pointerup",
+    async (e) => {
+      if (start && e.pointerId === start.pid) {
+        start = null;
+      }
+      await stopDrag();
+    },
+    { capture: true, passive: true }
+  );
+
+  list.addEventListener(
+    "pointercancel",
+    async () => {
+      start = null;
+      await stopDrag();
+    },
+    { capture: true, passive: true }
+  );
+}
+
 // --- 4. ФУНКЦИЯ РЕНДЕРИНГА СПИСКА (FileList) ---
 
 // 2: Логика получения содержимого с учетом внутреннего 'Upload' и внешнего 'Portfolio'.
@@ -1170,7 +1457,7 @@ function renderFileList(path, containerId, viewMode) {
       html += `<tr class="file-row up-level-link" data-name=".." data-type="folder" data-panel="${containerId}">
                     <td class="file-name">${SVG_UP_ICON} ..</td>
                     <td></td><td></td>
-                </tr>`;
+                  </tr>`;
     }
 
     const entries = Object.entries(currentFolder).filter(
@@ -1258,25 +1545,26 @@ function renderFileList(path, containerId, viewMode) {
         setSelectedInPanel(row.dataset.panel, row, e);
 
         // ✅ Mobile-friendly: один тап по медиа-файлу открывает lightbox
+        /*
         const type = row.dataset.type;
         const name = row.dataset.name;
 
-        // ✅ открываем лайтбокс по одному клику ТОЛЬКО на тач-устройствах
+       
         if (fmIsTouchUi() && type === "file") {
           const panelId = row.dataset.panel;
 
-          // найдём индекс файла в текущем списке lightbox items
+    
           const items =
             window.__lightboxItemsByPanel?.[panelId] ||
             window.__lightboxItems ||
             [];
           const idx = items.findIndex((it) => it && it.name === name);
 
-          // открываем lightbox только если это медиа (есть в items)
+         
           if (idx >= 0 && typeof window.openLightbox === "function") {
             window.openLightbox(idx);
           }
-        }
+        } */
       });
 
       row.addEventListener("dblclick", rowLogic);
@@ -1295,6 +1583,7 @@ function renderFileList(path, containerId, viewMode) {
 
     if (showUpLink) {
       html += `<div class="file-tile up-level-link" data-name=".." data-type="folder" data-panel="${containerId}">
+     
                     <div class="tile-visual">
                       <i class="bi bi-arrow-up-square tile-ico tile-ico-up" aria-hidden="true"></i>
                     </div>
@@ -1382,7 +1671,7 @@ function renderFileList(path, containerId, viewMode) {
         setSelectedInPanel(tile.dataset.panel, tile, e);
 
         // ✅ Mobile-friendly: один тап по медиа-файлу открывает lightbox
-        if (!fmIsTouchUi()) return;
+        /* if (!fmIsTouchUi()) return;
 
         const type = tile.dataset.type;
         const name = tile.dataset.name;
@@ -1397,7 +1686,7 @@ function renderFileList(path, containerId, viewMode) {
 
         if (idx >= 0 && typeof window.openLightbox === "function") {
           window.openLightbox(idx);
-        }
+        }*/
       });
     });
   }
@@ -1714,7 +2003,9 @@ function setSelectedInPanel(panelId, el, evt) {
 
   selState.focusName[panelId] = name;
 
-  // --- Preview rule: показываем только когда выделен РОВНО 1 элемент и это не folder
+  // --- Preview rule:
+  // На desktop НЕ открываем preview по одиночному клику (иначе ломает multi-select).
+  // На touch-UI можно оставлять auto-preview (по желанию).
   const selected = Array.from(list.querySelectorAll(".selected[data-name]"));
   if (selected.length !== 1) {
     hidePreviewFM();
@@ -1725,16 +2016,81 @@ function setSelectedInPanel(panelId, el, evt) {
   const oneName = one?.dataset?.name || "";
   const oneType = one?.dataset?.type || "";
 
+  // если это не файл — прячем preview
   if (!oneName || oneName === "." || oneName === ".." || oneType === "folder") {
     hidePreviewFM();
     return;
   }
 
-  const pathArr =
-    (window.__fmState?.paths && window.__fmState.paths[panelId]) ||
-    (list.dataset.path ? list.dataset.path.split("/").filter(Boolean) : []);
+  // ✅ авто-preview только на touch/coarse pointer (на десктопе — только dblclick через handleOpen)
+  const isTouchUi =
+    (window.matchMedia &&
+      window.matchMedia("(hover: none) and (pointer: coarse)").matches) ||
+    (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
 
-  showPreviewFM({ type: oneType, name: oneName, path: pathArr, panelId });
+  if (isTouchUi) {
+    const pathArr =
+      (window.__fmState?.paths && window.__fmState.paths[panelId]) ||
+      (list.dataset.path ? list.dataset.path.split("/").filter(Boolean) : []);
+    showPreviewFM({ type: oneType, name: oneName, path: pathArr, panelId });
+  }
+  // else: на десктопе ничего не делаем — preview откроется только по dblclick (handleOpen)
+}
+
+// ======================================================================
+// [FM] Clear selection when clicking empty space inside a panel (Explorer-like)
+// ======================================================================
+
+function fmClearSelectionInPanel(panelId, { hidePreview = true } = {}) {
+  const list = document.getElementById(panelId);
+  if (!list) return;
+
+  // 1) снять .selected
+  list
+    .querySelectorAll(".file-row.selected, .file-tile.selected")
+    .forEach((x) => {
+      x.classList.remove("selected");
+      x.removeAttribute("aria-selected");
+    });
+
+  // 2) сбросить якорь/фокус для Shift-диапазонов
+  if (window.__fmState?.selection) {
+    delete window.__fmState.selection.anchorIndex?.[panelId];
+    delete window.__fmState.selection.focusName?.[panelId];
+  }
+
+  // 3) закрыть preview (в админке это логично, чтобы не мешал)
+  if (hidePreview && typeof hidePreviewFM === "function") {
+    hidePreviewFM();
+  }
+}
+
+function bindEmptyClickToClearSelection(panelId) {
+  const list = document.getElementById(panelId);
+  if (!list || list.dataset.emptyClearBound === "1") return;
+  list.dataset.emptyClearBound = "1";
+
+  list.addEventListener("click", (e) => {
+    // ✅ Если только что закончили лассо — не очищаем выделение
+    if (list.dataset.marqueeJustFinished === "1") {
+      delete list.dataset.marqueeJustFinished;
+      return;
+    }
+
+    // ПКМ не трогаем (там контекстное меню)
+    if (e.button === 2) return;
+
+    // Если клик по элементу — это НЕ “пустое место”
+    if (e.target.closest(".file-row, .file-tile")) return;
+
+    // Не сбрасываем выделение при кликах по “служебным” зонам таблицы
+    if (e.target.closest("th[data-sort]")) return; // сортировка
+    if (e.target.closest(".resize-handle")) return; // ресайз колонок
+    if (e.target.closest(".rename-input")) return; // инпут переименования
+
+    setActivePanel(panelId);
+    fmClearSelectionInPanel(panelId);
+  });
 }
 
 // ✅ Активная панель = та, куда пользователь кликнул (не та, которую "последней перерисовали")
@@ -1946,6 +2302,11 @@ window.addEventListener("load", async () => {
   // --- C. Контекстное меню ---
 
   const menu = document.getElementById("context-menu");
+  // ✅ Важно: меню должно жить в <body>, иначе оно может проваливаться под другие слои (stacking context)
+  if (menu && menu.parentElement !== document.body) {
+    document.body.appendChild(menu);
+  }
+
   let contextSelectedEl = null;
 
   function clearContextSelection() {
@@ -2063,11 +2424,11 @@ window.addEventListener("load", async () => {
       handleOpen(menu.dataset.targetType, name, path, sourcePanelId);
 
     // ✅ DELETE: работает и для дерева, если deleteItem научим basePathOverride (см. пункт 2)
-    if (action === "delete") handleDelete(path, name);
+    if (action === "delete") handleDelete(path, name, sourcePanelId);
 
     // ✅ RENAME: для дерева отдельный inline-rename
     if (action === "rename") {
-      if (name !== ".." && targetElement) {
+      if (name !== "." && name !== ".." && targetElement) {
         if (isTree) {
           initializeTreeRename(path, name, targetElement);
         } else {
@@ -2386,9 +2747,171 @@ window.addEventListener("load", async () => {
     });
   }
 
-  // ================
+  // ==========================================================
   // !!! ФИНАЛЬНЫЙ БЛОК: Запуск !!!
   // ==========================================================
+
+  // ======================================================================
+  // [FM] Marquee selection (rectangle / lasso) for desktop mouse
+  // ======================================================================
+
+  function bindMarqueeSelection(panelId) {
+    const list = document.getElementById(panelId);
+    if (!list || list.dataset.marqueeBound === "1") return;
+    list.dataset.marqueeBound = "1";
+
+    // контейнер должен быть якорем для absolute
+    const cs = getComputedStyle(list);
+    if (cs.position === "static") list.style.position = "relative";
+
+    let dragging = false;
+    let startX = 0,
+      startY = 0;
+    let box = null;
+    let items = [];
+
+    const getLocalPoint = (clientX, clientY) => {
+      const r = list.getBoundingClientRect();
+      return {
+        x: clientX - r.left + list.scrollLeft,
+        y: clientY - r.top + list.scrollTop,
+      };
+    };
+
+    const rectIntersects = (a, b) =>
+      !(
+        a.right < b.left ||
+        a.left > b.right ||
+        a.bottom < b.top ||
+        a.top > b.bottom
+      );
+
+    const setElSelected = (el, on) => {
+      if (!el) return;
+      if (on) {
+        el.classList.add("selected");
+        el.setAttribute("aria-selected", "true");
+      } else {
+        el.classList.remove("selected");
+        el.removeAttribute("aria-selected");
+      }
+    };
+
+    const clearPanelSelection = () => {
+      list
+        .querySelectorAll(".file-row.selected, .file-tile.selected")
+        .forEach((el) => {
+          el.classList.remove("selected");
+          el.removeAttribute("aria-selected");
+        });
+    };
+
+    const onMove = (e) => {
+      if (!dragging) return;
+      e.preventDefault();
+
+      const p = getLocalPoint(e.clientX, e.clientY);
+      const left = Math.min(startX, p.x);
+      const top = Math.min(startY, p.y);
+      const right = Math.max(startX, p.x);
+      const bottom = Math.max(startY, p.y);
+
+      box.style.left = left + "px";
+      box.style.top = top + "px";
+      box.style.width = right - left + "px";
+      box.style.height = bottom - top + "px";
+
+      const selRect = { left, top, right, bottom };
+
+      // выделяем пересечения
+      items.forEach((el) => {
+        const ir = el.getBoundingClientRect();
+        const lr = list.getBoundingClientRect();
+
+        const r = {
+          left: ir.left - lr.left + list.scrollLeft,
+          top: ir.top - lr.top + list.scrollTop,
+          right: ir.right - lr.left + list.scrollLeft,
+          bottom: ir.bottom - lr.top + list.scrollTop,
+        };
+
+        setElSelected(el, rectIntersects(selRect, r));
+      });
+    };
+
+    const stop = () => {
+      // ✅ После завершения лассо браузер отправляет click по пустому месту.
+      // Этот click не должен сбрасывать выделение.
+      list.dataset.marqueeJustFinished = "1";
+
+      if (!dragging) return;
+      dragging = false;
+
+      document.removeEventListener("mousemove", onMove, true);
+      document.removeEventListener("mouseup", stop, true);
+
+      box?.remove();
+      box = null;
+      items = [];
+    };
+
+    list.addEventListener("mousedown", (e) => {
+      // только ЛКМ
+      if (e.button !== 0) return;
+
+      // если начали на элементе — это не lasso (там клики/днд)
+      if (e.target.closest(".file-row, .file-tile")) return;
+
+      // не мешаем сортировке/ресайзу/переименованию
+      if (e.target.closest("th[data-sort]")) return;
+      if (e.target.closest(".resize-handle")) return;
+      if (e.target.closest(".rename-input")) return;
+
+      // только для desktop мыши (не touch)
+      if (fmIsTouchUi && fmIsTouchUi()) return;
+
+      e.preventDefault();
+      setActivePanel(panelId);
+
+      // начинаем рамку: по умолчанию заменяем текущее выделение
+      // (если захочешь режим "Ctrl добавляет", скажи — добавим)
+      clearPanelSelection();
+      hidePreviewFM?.();
+
+      const p = getLocalPoint(e.clientX, e.clientY);
+      startX = p.x;
+      startY = p.y;
+
+      items = Array.from(list.querySelectorAll(".file-row, .file-tile")).filter(
+        (el) => {
+          const nm = el.dataset?.name;
+          return nm && nm !== "." && nm !== "..";
+        }
+      );
+
+      box = document.createElement("div");
+      box.className = "fm-marquee";
+      box.style.left = startX + "px";
+      box.style.top = startY + "px";
+      box.style.width = "0px";
+      box.style.height = "0px";
+      list.appendChild(box);
+
+      dragging = true;
+
+      document.addEventListener("mousemove", onMove, true);
+      document.addEventListener("mouseup", stop, true);
+    });
+  }
+
+  bindEmptyClickToClearSelection("file-list-1");
+  bindEmptyClickToClearSelection("file-list-2");
+
+  bindTouchDnD("file-list-1");
+  bindTouchDnD("file-list-2");
+
+  bindMarqueeSelection("file-list-1");
+  bindMarqueeSelection("file-list-2");
 
   toggleSplit("single");
 
@@ -2473,31 +2996,28 @@ if (!window.__fmHotkeysBound) {
   }
 
   async function hotkeyDelete(ctx) {
-    if (!ctx?.name) return;
+    if (!ctx) return;
 
-    // единое подтверждение (твоя кастомная confirmModal через showConfirmModal-bridge)
-    if (typeof window.showConfirmModal === "function") {
-      window.showConfirmModal(
-        `Delete "${ctx.name}"?\nThis action cannot be undone.`,
-        async () => {
-          await window.deleteItem(ctx.name, {
-            basePathOverride: (ctx.pathArr || []).join("/"),
-            skipConfirm: true,
-          });
-        }
-      );
-    } else {
-      // fallback, если что-то отключено
-      const ok = window.confirm(
-        `Delete "${ctx.name}"?\nThis action cannot be undone.`
-      );
-      if (ok) {
-        await window.deleteItem(ctx.name, {
-          basePathOverride: (ctx.pathArr || []).join("/"),
+    // Если это дерево — там одиночная цель (оставляем как было)
+    if (ctx.fromTree) {
+      const basePath = (ctx.pathArr || []).join("/");
+      const msg = `Delete "${ctx.name}"?`;
+
+      const run = async () => {
+        await window.deleteItem?.(ctx.name, {
+          basePathOverride: basePath,
           skipConfirm: true,
         });
-      }
+      };
+
+      if (typeof window.showConfirmModal === "function")
+        window.showConfirmModal(msg, run);
+      else if (confirm(msg)) await run();
+      return;
     }
+
+    // А вот для панелей — используем пачку выделенных
+    await handleDelete(ctx.pathArr || [], ctx.name, ctx.panelId);
   }
 
   function hotkeyRename(ctx) {

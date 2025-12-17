@@ -271,13 +271,10 @@ async function renameItem(oldName, newName, basePathOverride = undefined) {
   const rawBase =
     typeof basePathOverride === "string" ? basePathOverride : getCurrentPath();
   const basePath = toServerRelPath(rawBase);
-  const targetPath = basePath ? `${basePath}/${name}` : name;
 
+  // targetPath здесь не нужен, и раньше был баг: name не определён
   const oldPath = basePath ? `${basePath}/${oldName}` : oldName;
   const newPath = basePath ? `${basePath}/${newName}` : newName;
-
-  console.log("[renameItem] oldPath:", oldPath);
-  console.log("[renameItem] newPath:", newPath);
 
   try {
     const res = await fetch("/rename", {
@@ -314,8 +311,10 @@ async function deleteItem(name, options = {}) {
     return false;
   }
 
-  // 1. Получаем базовый путь
-  const basePath = toServerRelPath(getCurrentPath());
+  // 1. Получаем базовый путь (учитываем basePathOverride)
+  const rawBase =
+    typeof basePathOverride === "string" ? basePathOverride : getCurrentPath();
+  const basePath = toServerRelPath(rawBase);
   const targetPath = basePath ? `${basePath}/${name}` : name;
 
   console.log("[deleteItem] name:", name);
@@ -327,12 +326,9 @@ async function deleteItem(name, options = {}) {
   let confirmed = true;
 
   if (!skipConfirm) {
-    const confirmed = confirm(
-      `Delete "${name}"?\nThis action cannot be undone.`
-    );
+    confirmed = confirm(`Delete "${name}"?\nThis action cannot be undone.`);
     if (!confirmed) {
-      if (typeof showToast === "function")
-        showToast("Deletion cancelled", "info");
+      showToast?.("Deletion cancelled", "info");
       return false;
     }
   }

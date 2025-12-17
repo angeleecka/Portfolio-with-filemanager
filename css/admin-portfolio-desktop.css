@@ -27,6 +27,10 @@
   touch-action: manipulation;
 }
 
+.admin-explorer {
+  background: var(--color-panel-bg);
+}
+
 /* =========================
    2. Сетка категорий и галереи файлов
    (одинаковая сетка для category-list и gallery)
@@ -649,7 +653,6 @@ header.portfolio-header #main-nav .nav-links {
     z-index: 6500;
     overflow: auto;
 
-    background: var(--color-panel-bg);
     border-right: 1px solid var(--border-color);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
   }
@@ -668,8 +671,8 @@ header.portfolio-header #main-nav .nav-links {
   /* close button inside drawer (if it's a child of .admin-explorer) */
   .admin-explorer .admin-drawer-close {
     position: absolute;
-    top: 22px;
-    right: 22px;
+    top: 10px;
+    right: 14px;
     z-index: 6601;
   }
 }
